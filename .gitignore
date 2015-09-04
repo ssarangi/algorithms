@@ -1,0 +1,6 @@
+build/
+.idea/
+*.pyc
+*.pyproj
+*.sln
+*.suo
