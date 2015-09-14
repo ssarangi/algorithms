@@ -84,9 +84,11 @@ def create_path(weights):
     for i in range(len(weights) - 1, 0, -1):
         if i > 0 and weights[i] > weights[i-1]:
             soln.append(i)
-            i = i - 1
-        else:
-            
+            i -= 1
+        elif i == 0:
+            soln.append(i)
+
+    return soln
 
 def create_solution(weights):
     for i in range(2, len(weights)):
