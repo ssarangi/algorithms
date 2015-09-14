@@ -81,12 +81,15 @@ def old_main():
 
 def create_path(weights):
     soln = []
-    for i in range(len(weights) - 1, 0, -1):
+    i = len(weights) - 1
+    while i > 0:
         if i > 0 and weights[i] > weights[i-1]:
             soln.append(i)
             i -= 1
         elif i == 0:
             soln.append(i)
+
+        i -= 1
 
     return soln
 
@@ -97,7 +100,7 @@ def create_solution(weights):
         elif i > 2 and weights[i] + weights[i - 3] > weights[i - 1]:
             weights[i] += weights[i - 3]
 
-    soln = create_path(weights)
+    soln = create_path(weights).reverse()
     return weights, soln
 
 
