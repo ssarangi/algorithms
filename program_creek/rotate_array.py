@@ -22,11 +22,30 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
 
-def rotate_arr(arr, k):
-    pass
+# Use intermediate array
+# Bubble Rotate
+# Reversal
+
+def rotate_arr_intermediate_array(arr, k):
+    result = []
+    for i in range(k + 1, len(arr)):
+        result.append(arr[i])
+
+    for i in range(0, k + 1):
+        result.append(arr[i])
+
+    return result
+
+def bubble_rotate(arr, k):
+    result = []
+    for i in range()
 
 import unittest
 
 class Test(unittest.TestCase):
     def test(self):
-        self.assertEqual(rotate_arr([1,2,3,4,5,6,7], k=3), [5,6,7,1,2,3,4])
+        self.assertEqual(rotate_arr_intermediate_array([1,2,3,4,5,6,7], k=3), [5,6,7,1,2,3,4])
+        self.assertEqual(bubble_rotate([1,2,3,4,5,6,7], k=3), [5,6,7,1,2,3,4])
+
+if __name__ == "__main__":
+    unittest.main()
