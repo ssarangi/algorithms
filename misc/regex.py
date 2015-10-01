@@ -27,7 +27,7 @@ class Stack(list):
         return self[-1]
 
     def empty(self):
-        return len(self) > 0
+        return len(self) == 0
 
 class Regex:
     RegexOpPrecedence = {
@@ -58,48 +58,28 @@ class Regex:
         prec = self._precedence.get(c, 6)
         return abs(prec)
 
-    def infix2postfix_old(self, input, op_stack, op_precedence, postfix_prev_iter):
-        postfix = postfix_prev_iter
-        stack = op_stack
-
-        if not input:
-            return postfix + "".join(stack)
-
-        c = input[0]
-
-        if c == '(':
-            stack.append(c)
-        elif c == ')':
-            stack_elms_to_pop = [el for el in stack if el != '(']
-            postfix += "".join(stack_elms_to_pop)
-            stack = stack[len(postfix):]
-        else:
-            c_precedence = self.get_precedence(c, op_precedence)
-            stack_to_take = [x for x in stack if self.get_precedence(x, op_precedence) >= c_precedence]
-            postfix += "".join(stack_to_take)
-            stack = stack[len(stack) - len(stack_to_take):]
-            stack.append(c)
-
-        return self.infix2postfix(input[1:], stack, op_precedence, postfix)
-
-
     def infix2postfix(self, input):
         stack = Stack()
         postfix = ""
-        stack.append(input[0])
 
-        for c in input[1:]:
-            top = stack.top()
-            if self.get_precedence(c) > self.get_precedence(top):
-                op = stack.pop()
-                lhs = stack.pop()
-                rhs = c
-                postfix += lhs + rhs + op
-                stack.append(postfix)
+        for c in input:
+            if c == ')':
+                # pop all items till we get the '('
+                stack_top = ""
+                while stack_top != "(":
+                    stack_top = stack.pop()
+
+                    if stack_top != '(':
+                        postfix += stack_top
+            elif c not in self._precedence:
+                postfix += c
             else:
                 stack.append(c)
 
-        return "".join(stack)
+        while not stack.empty():
+            postfix += stack.pop()
+
+        return postfix
 
 def main():
     regex = Regex("mypattern")
