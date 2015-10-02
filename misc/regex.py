@@ -96,7 +96,7 @@ class Regex:
         return self.format_regex(regex[1:], result + c1 + tmp)
 
 
-    def infix2postfix(self, input):
+    def _old(self, input):
         """
         a.b*|c+.d transforms to ab*.c+d.|
         :param input:
@@ -114,6 +114,10 @@ class Regex:
 
                     if stack_top != '(':
                         postfix += stack_top
+            elif len(stack) == 2:
+                postfix += stack.pop()
+                postfix += stack.pop()
+                stack.append(c)
             elif c not in self._precedence:
                 postfix += c
             else:
@@ -123,6 +127,36 @@ class Regex:
             postfix += stack.pop()
 
         return postfix
+
+    def infix2postfix(self, input, stack=[], postfix=""):
+        if not input:
+            return postfix + "".join(stack)
+
+        c = input[0]
+
+        if c == '(':
+            stack.append(c)
+        elif c == ')':
+            stack_elms_to_pop = []
+            for i in stack:
+                if i == ')':
+                    break
+                stack_elms_to_pop.append(i)
+            postfix += "".join(stack_elms_to_pop)
+            stack = stack[-(len(stack) - len(stack_elms_to_pop) + 1):]
+        else:
+            stack_to_take = []
+            c_precedence = self.get_precedence(c)
+            for i in stack:
+                if self.get_precedence(i) < c_precedence:
+                    break
+                stack_to_take.append(i)
+            postfix += "".join(stack_to_take)
+            stack = stack[-(len(stack) - len(stack_to_take)):]
+            stack.append(c)
+
+        return self.infix2postfix(input[1:], stack, postfix)
+
 
     def postfix2tree(self, postfix):
         stack = []
