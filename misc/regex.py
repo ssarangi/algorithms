@@ -97,6 +97,11 @@ class Regex:
 
 
     def infix2postfix(self, input):
+        """
+        a.b*|c+.d transforms to ab*.c+d.|
+        :param input:
+        :return:
+        """
         stack = Stack()
         postfix = ""
 
