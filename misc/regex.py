@@ -98,39 +98,6 @@ class Regex:
 
         return self.format_regex(regex[1:], result + c1 + tmp)
 
-
-    def _old(self, input):
-        """
-        a.b*|c+.d transforms to ab*.c+d.|
-        :param input:
-        :return:
-        """
-        stack = Stack()
-        postfix = ""
-
-        for c in input:
-            if c == ')':
-                # pop all items till we get the '('
-                stack_top = ""
-                while stack_top != "(":
-                    stack_top = stack.pop()
-
-                    if stack_top != '(':
-                        postfix += stack_top
-            elif len(stack) == 2:
-                postfix += stack.pop()
-                postfix += stack.pop()
-                stack.append(c)
-            elif c not in self._precedence:
-                postfix += c
-            else:
-                stack.append(c)
-
-        while not stack.empty():
-            postfix += stack.pop()
-
-        return postfix
-
     def infix2postfix(self, input, stack=Stack(), postfix=""):
         if not input:
             while not stack.empty():
