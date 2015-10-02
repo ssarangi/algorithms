@@ -29,6 +29,9 @@ class Stack(list):
     def empty(self):
         return len(self) == 0
 
+    def push(self, item):
+        self.append(item)
+
 class Literal:
     def __init__(self, c):
         self.c = c
@@ -128,9 +131,11 @@ class Regex:
 
         return postfix
 
-    def infix2postfix(self, input, stack=[], postfix=""):
+    def infix2postfix(self, input, stack=Stack(), postfix=""):
         if not input:
-            return postfix + "".join(stack)
+            while not stack.empty():
+                postfix += stack.pop()
+            return postfix
 
         c = input[0]
 
@@ -142,18 +147,19 @@ class Regex:
                 if i == ')':
                     break
                 stack_elms_to_pop.append(i)
+            stack_elms_to_pop.reverse()
             postfix += "".join(stack_elms_to_pop)
-            stack = stack[-(len(stack) - len(stack_elms_to_pop) + 1):]
+            stack = stack[len(stack_elms_to_pop) + 1:]
         else:
             stack_to_take = []
             c_precedence = self.get_precedence(c)
-            for i in stack:
-                if self.get_precedence(i) < c_precedence:
-                    break
-                stack_to_take.append(i)
+
+            while not stack.empty() and self.get_precedence(stack.top()) > c_precedence:
+                stack_to_take.append(stack.pop())
+
             postfix += "".join(stack_to_take)
-            stack = stack[-(len(stack) - len(stack_to_take)):]
-            stack.append(c)
+
+            stack.push(c)
 
         return self.infix2postfix(input[1:], stack, postfix)
 
