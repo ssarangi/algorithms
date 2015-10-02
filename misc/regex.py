@@ -232,16 +232,16 @@ class Regex:
             else:
                 return False
         elif isinstance(root, Regex.Split):
-            self.evaluate_nfa_recursive(root.out1, string_to_match) | self.evaluate_nfa_recursive(root.out2, string_to_match)
+            return self.evaluate_nfa_recursive(root.out1, string_to_match) | self.evaluate_nfa_recursive(root.out2, string_to_match)
         elif isinstance(root, Regex.Consume):
             if not string_to_match:
                 return False
             elif root.c != string_to_match[0]:
                 return False
             else:
-                self.evaluate_nfa_recursive(root.out, string_to_match[1:])
+                return self.evaluate_nfa_recursive(root.out, string_to_match[1:])
         elif isinstance(root, Regex.Placeholder):
-            self.evaluate_nfa_recursive(root.pointing_to, string_to_match)
+            return self.evaluate_nfa_recursive(root.pointing_to, string_to_match)
 
 
     def compile(self):
