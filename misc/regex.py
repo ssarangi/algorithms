@@ -29,6 +29,9 @@ class Stack(list):
     def empty(self):
         return len(self) == 0
 
+    def push(self, item):
+        self.append(item)
+
 class Literal:
     def __init__(self, c):
         self.c = c
@@ -95,29 +98,38 @@ class Regex:
 
         return self.format_regex(regex[1:], result + c1 + tmp)
 
+    def infix2postfix(self, input, stack=Stack(), postfix=""):
+        if not input:
+            while not stack.empty():
+                postfix += stack.pop()
+            return postfix
 
-    def infix2postfix(self, input):
-        stack = Stack()
-        postfix = ""
+        c = input[0]
 
-        for c in input:
-            if c == ')':
-                # pop all items till we get the '('
-                stack_top = ""
-                while stack_top != "(":
-                    stack_top = stack.pop()
+        if c == '(':
+            stack.append(c)
+        elif c == ')':
+            stack_elms_to_pop = []
+            for i in stack:
+                if i == ')':
+                    break
+                stack_elms_to_pop.append(i)
+            stack_elms_to_pop.reverse()
+            postfix += "".join(stack_elms_to_pop)
+            stack = stack[len(stack_elms_to_pop) + 1:]
+        else:
+            stack_to_take = []
+            c_precedence = self.get_precedence(c)
 
-                    if stack_top != '(':
-                        postfix += stack_top
-            elif c not in self._precedence:
-                postfix += c
-            else:
-                stack.append(c)
+            while not stack.empty() and self.get_precedence(stack.top()) > c_precedence:
+                stack_to_take.append(stack.pop())
 
-        while not stack.empty():
-            postfix += stack.pop()
+            postfix += "".join(stack_to_take)
 
-        return postfix
+            stack.push(c)
+
+        return self.infix2postfix(input[1:], stack, postfix)
+
 
     def postfix2tree(self, postfix):
         stack = []
@@ -187,16 +199,16 @@ class Regex:
             else:
                 return False
         elif isinstance(root, Regex.Split):
-            self.evaluate_nfa_recursive(root.out1, string_to_match) | self.evaluate_nfa_recursive(root.out2, string_to_match)
+            return self.evaluate_nfa_recursive(root.out1, string_to_match) | self.evaluate_nfa_recursive(root.out2, string_to_match)
         elif isinstance(root, Regex.Consume):
             if not string_to_match:
                 return False
             elif root.c != string_to_match[0]:
                 return False
             else:
-                self.evaluate_nfa_recursive(root.out, string_to_match[1:])
+                return self.evaluate_nfa_recursive(root.out, string_to_match[1:])
         elif isinstance(root, Regex.Placeholder):
-            self.evaluate_nfa_recursive(root.pointing_to, string_to_match)
+            return self.evaluate_nfa_recursive(root.pointing_to, string_to_match)
 
 
     def compile(self):
