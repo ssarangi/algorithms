@@ -31,23 +31,31 @@ return [1,6],[8,10],[15,18].
 """
 
 def merge_intervals(*kwargs):
-    intervals = []
-    intervals.append(kwargs[0][0])
-    for i in range(0, len(kwargs) - 2):
-        interval1 = kwargs[i]
-        interval2 = kwargs[i+1]
+    kwargs = list(kwargs)
+    idx = 0
+    while idx < len(kwargs) - 1:
+        interval_1 = kwargs[idx]
+        interval_2 = kwargs[idx + 1]
+        if interval_1[1] >= interval_2[0]:
+            if interval_1[1] <= interval_2[1]:
+                interval_1.remove(interval_1[1])
+                interval_1.append(interval_2[1])
+            kwargs.remove(interval_2)
+        else:
+            idx += 1
 
-        if interval2[0] <= interval1[1]:
-            intervals.append(interval2[1])
+    return [kwargs]
 
 import unittest
 
 class Test(unittest.TestCase):
     def test(self):
         self.assertEqual(merge_intervals([1,3],[2,6],[8,10],[15,18]), [[1,6],[8,10],[15,18]])
+        self.assertEqual(merge_intervals([1,4],[3,5],[2,4],[6,10]), [[1,5],[6,10]])
 
 def main():
-    pass
+    merge_intervals([1,3],[2,6],[8,10],[15,18])
+    merge_intervals([1,4],[3,5],[2,4],[6, 10])
 
 if __name__ == "__main__":
-    pass
+    unittest.main()
