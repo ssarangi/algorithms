@@ -49,12 +49,12 @@ def find_median(arr1, arr2):
         if arr1[center_1 - 1] <= median_2:
             return median_2
         else:
-            return find_median(arr1[0:center_1 - 1], arr2[center_2 + 1:])
+            return find_median(arr1[:center_1], arr2[center_2 + 1:])
     elif median_2 > median_1:
         if arr2[center_2 - 1] <= median_1:
             return median_1
         else:
-            return find_median(arr1[center_1 + 1:], arr2[:center_2+1])
+            return find_median(arr1[center_1 + 1:], arr2[:center_2])
     else:
         return median_1
 

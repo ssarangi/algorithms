@@ -23,41 +23,13 @@ THE SOFTWARE.
 """
 
 """
-Find the kth largest element in an unsorted array. Note that it is the kth largest element in the
-sorted order, not the kth distinct element.
+Given a set of non-overlapping & sorted intervals, insert a new interval into the intervals (merge if necessary).
 
-For example, given [3,2,1,5,6,4] and k = 2, return 5.
+Example 1:
+Given intervals [1,3],[6,9], insert and merge [2,5] in as [1,5],[6,9].
 
-Note: You may assume k is always valid, 1 ≤ k ≤ array's length.
+Example 2:
+Given [1,2],[3,5],[6,7],[8,10],[12,16], insert and merge [4,9] in as [1,2],[3,10],[12,16].
 
-Soln: This can be sorted and then you find the kth largest. O(nlogn)
+This is because the new interval [4,9] overlaps with [3,5],[6,7],[8,10].
 """
-
-import sys
-
-def kth_largest(arr, k):
-    top_k = [-sys.maxsize] * k
-    for i in arr:
-        for idx in range(0, len(top_k)):
-            if i > top_k[idx]:
-                top_k.insert(idx, i)
-                top_k.pop()
-                break
-
-    return top_k[-1]
-
-def main():
-    arr = [3,2,1,5,6,4]
-    k = 2
-    print(kth_largest(arr, k))
-
-import unittest
-
-class Test(unittest.TestCase):
-    def test(self):
-        arr = [3,2,1,5,6,4]
-        k = 2
-        self.assertEqual(kth_largest(arr, k), 5)
-
-if __name__ == "__main__":
-    main()
