@@ -28,36 +28,49 @@ To understand this solution, you can use s="aab" and p="*ab".
 """
 
 def wildcard_match(pattern, string):
-    tmp_idx = 0
-    idx = 0
-    while idx < len(pattern):
-        p = pattern[idx]
+    string_idx = 0
+    pattern_idx = 0
+    while pattern_idx < len(pattern):
+        p = pattern[pattern_idx]
         if p == '*':
-            tmp_idx = idx
-            original_idx = idx
-            idx += 1
-            p = pattern[idx]
-            s = string[tmp_idx]
+            string_idx = pattern_idx
+            original_idx = pattern_idx
+            pattern_idx += 1
+            p = pattern[pattern_idx]
+            s = string[string_idx]
             while s == p:
-                tmp_idx += 1
-                s = string[tmp_idx]
+                string_idx += 1
+                s = string[string_idx]
 
-            if tmp_idx - original_idx == 0:
+            if string_idx - original_idx == 0:
                 return False
-            idx += 1
+            pattern_idx += 1
         elif p == '?':
-            pass
+            string_idx = pattern_idx
+            pattern_idx += 1
+            s = string[string_idx]
+            p = pattern[pattern_idx]
+            if s == p:
+                string_idx += 1
+            pattern_idx += 1
         else:
-            if p != string[tmp_idx]:
+            if p != string[string_idx]:
                 return False
-            tmp_idx += 1
-            idx += 1
+            string_idx += 1
+            pattern_idx += 1
 
-    return True
+    if pattern_idx == string_idx:
+        return True
+
+    return False
 
 def main():
     pattern = "*ab"
     string = "aaaab"
+    print(wildcard_match(pattern, string))
+
+    pattern = "?ab"
+    string = "bb"
     print(wildcard_match(pattern, string))
 
 if __name__ == "__main__":
