@@ -29,33 +29,7 @@ THE SOFTWARE.
 # ["4", "13", "5", "/", "+"] -> (4 + (13 / 5)) -> 6
 
 import unittest
-
-class Stack:
-    def __init__(self):
-        self._data = []
-
-    def empty(self):
-        return len(self._data) == 0
-
-    def top(self):
-        return self._data[-1]
-
-    def pop(self):
-        assert(len(self._data) > 0)
-        tmp = self._data[-1]
-        self._data.remove(tmp)
-        return tmp
-
-    def push(self, item):
-        self._data.append(item)
-
-    def size(self):
-        return len(self._data)
-
-    def __str__(self):
-        return str(self._data)
-
-    __repr__ = __str__
+from program_creek.utils import Stack
 
 operators = {
     '+': lambda x, y: x + y,
