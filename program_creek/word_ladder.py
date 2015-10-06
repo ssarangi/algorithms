@@ -125,6 +125,6 @@ class Test(unittest.TestCase):
         self.assertEqual(shortest_transformation("hit", "cog", ["hot", "dot", "dog", "lot", "log"]), 5)
 
 if __name__ == "__main__":
-    # unittest.main()
     print(shortest_transformation("hit", "cog", ["hot", "dot", "dog", "lot", "log"]))
     print(shortest_transformation("dog", "him", ["dam","dat", "ham", "dag"]))
+    unittest.main()

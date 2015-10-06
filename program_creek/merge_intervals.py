@@ -58,4 +58,5 @@ def main():
     merge_intervals([1,4],[3,5],[2,4],[6, 10])
 
 if __name__ == "__main__":
+    main()
     unittest.main()

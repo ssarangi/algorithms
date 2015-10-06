@@ -56,4 +56,5 @@ class Test(unittest.TestCase):
         self.assertEqual(isomorphic("egg", "add"), True)
 
 if __name__ == "__main__":
+    main()
     unittest.main()

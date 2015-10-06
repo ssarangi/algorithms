@@ -33,3 +33,38 @@ Given [1,2],[3,5],[6,7],[8,10],[12,16], insert and merge [4,9] in as [1,2],[3,10
 
 This is because the new interval [4,9] overlaps with [3,5],[6,7],[8,10].
 """
+
+def insert_interval(interval_to_add, *kwargs):
+    kwargs = list(kwargs)
+    idx = 0
+    while idx < len(kwargs) - 1:
+        interval = kwargs[idx]
+        if interval[1] > interval_to_add[0] and interval[1] < interval_to_add[1]:
+            interval[1] = interval_to_add[1]
+        else:
+            interval_1 = kwargs[idx]
+            interval_2 = kwargs[idx + 1]
+            if interval_1[1] >= interval_2[0]:
+                if interval_1[1] <= interval_2[1]:
+                    interval_1.remove(interval_1[1])
+                    interval_1.append(interval_2[1])
+                kwargs.remove(interval_2)
+            else:
+                idx += 1
+
+    return [kwargs]
+
+import unittest
+
+class Test(unittest.TestCase):
+    def test(self):
+        self.assertEqual(insert_interval([2,5],[1,3],[6,9]), [[1,5],[6,9]])
+        self.assertEqual(insert_interval([4,9],[1,2],[3,5],[6,7],[8,10],[12,16]), [[1,2],[3,10],[12,16]])
+
+def main():
+    insert_interval([2,5],[1,3],[6,9])
+    insert_interval([4,9],[1,2],[3,5],[6,7],[8,10],[12,16])
+
+if __name__ == "__main__":
+    main()
+    unittest.main()
