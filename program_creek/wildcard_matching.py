@@ -73,5 +73,14 @@ def main():
     string = "bb"
     print(wildcard_match(pattern, string))
 
+import unittest
+
+class Test(unittest.TestCase):
+    def test(self):
+        self.assertEqual(wildcard_match("*ab", "aaaab"), True)
+        self.assertEqual(wildcard_match("?ab", "bb"), False)
+        self.assertEqual(wildcard_match("?ab", "b"), True)
+        self.assertEqual(wildcard_match("?ab", "ab"), True)
+
 if __name__ == "__main__":
     main()
