@@ -28,11 +28,37 @@ median of the two sorted arrays. The overall run time complexity should be O(log
 """
 
 def find_median(arr1, arr2):
-    pass
+    # since the arrays are sorted keep on recursively finding elements until all elements have been seen
+    if len(arr1) > 0:
+        center_1 = int(len(arr1) / 2)
+        median_1 = arr1[center_1]
+
+    if len(arr2) > 0:
+        center_2 = int(len(arr2) / 2)
+        median_2 = arr2[center_2]
+
+    if (len(arr1)  == 0):
+        return median_2
+
+    if (len(arr2) == 0):
+        return median_1
+
+    if median_1 > median_2:
+        if arr1[center_1 - 1] <= median_2:
+            return median_2
+        else:
+            return find_median(arr1[0:center_1 - 1], arr2[center_2 + 1:])
+    elif median_2 > median_1:
+        if arr2[center_2 - 1] <= median_1:
+            return median_1
+        else:
+            return find_median(arr1[center_1 + 1:], arr2[:center_2+1])
+    else:
+        return median_1
 
 def main():
-    arr1 = [1,3,5,7,9]
-    arr2 = [2,4,6,8,10]
+    arr1 = [1,2,3,4,5]
+    arr2 = [6,7,8,9,20,30,40,50]
 
     print(find_median(arr1, arr2))
 
@@ -41,7 +67,7 @@ import unittest
 class Test(unittest.TestCase):
     def test(self):
         arr1 = [1,2,3,4,5]
-        arr2 = [6,7,8,9,0]
+        arr2 = [6,7,8,9,20,30,40,50]
         self.assertEqual(find_median(arr1, arr2), 5)
 
 if __name__ == "__main__":
