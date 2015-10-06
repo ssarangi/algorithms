@@ -31,10 +31,12 @@ def find_median(arr1, arr2):
     # since the arrays are sorted keep on recursively finding elements until all elements have been seen
     if len(arr1) > 0:
         center_1 = int(len(arr1) / 2)
+        if len(arr1) % 2 == 0: center_1 -= 1
         median_1 = arr1[center_1]
 
     if len(arr2) > 0:
         center_2 = int(len(arr2) / 2)
+        if len(arr2) % 2 == 0: center_2 -= 1
         median_2 = arr2[center_2]
 
     if (len(arr1)  == 0):
@@ -57,8 +59,16 @@ def find_median(arr1, arr2):
         return median_1
 
 def main():
-    arr1 = [1,2,3,4,5]
-    arr2 = [6,7,8,9,20,30,40,50]
+    # arr1 = [1,2,3,4,5]
+    # arr2 = [6,7,8,9,20,30,40,50]
+    arr1 = [i for i in range(20, 40, 2)]
+    arr2 = [i for i in range(1, 80, 2)]
+
+    # arr1.extend(arr2)
+    # arr1.sort()
+    #
+    # print(arr1)
+    # print(arr1[int(len(arr1) / 2)])
 
     print(find_median(arr1, arr2))
 
