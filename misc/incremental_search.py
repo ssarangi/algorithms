@@ -27,3 +27,63 @@ Main file for implementing all algorithms for incremental search.
 tries, suffix trees etc
 """
 
+class Node:
+    def __init__(self, char):
+        self._char = char
+        self._child_nodes = [None] * 26
+
+    @property
+    def char(self):
+        return self._char
+
+    @property
+    def children(self):
+        return self._child_nodes
+
+    def __str__(self):
+        return self._char
+
+    __repr__ = __str__
+
+def get_ascii(char):
+    return ord(char) - ord('a')
+
+def get_character(ascii):
+    return chr(ascii + ord('a'))
+
+def trie(word, root):
+    nodes = root
+    for c in word:
+        ascii = get_ascii(c)
+        current_node = nodes[ascii]
+
+        if current_node == None:
+            current_node = Node(c)
+            nodes[ascii] = current_node
+
+        nodes = current_node.children
+
+    return root
+
+def create_trie(words, root):
+    for word in words:
+        root = trie(word, root)
+
+    return root
+
+def read_dictionary(filename):
+    root = []
+    for i in range(0, 26):
+        root.append(Node(chr(i + ord('a'))))
+
+    f = open(filename)
+    words = f.readlines()
+    f.close()
+
+    create_trie(words, root)
+
+def main():
+    read_dictionary('wordsEn.txt')
+
+if __name__ == "__main__":
+    main()
