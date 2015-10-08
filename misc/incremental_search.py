@@ -50,6 +50,135 @@ class Node:
 
     __repr__ = __str__
 
+class TSTNode:
+    def __init__(self, char):
+        self._data = char
+        self._left = None
+        self._right = None
+        self._middle = None
+        self._is_end = False
+
+    @property
+    def data(self):
+        return self._data
+
+    @property
+    def left(self):
+        return self._left
+
+    @left.setter
+    def left(self, v):
+        self._left = v
+
+    @property
+    def right(self):
+        return self._right
+
+    @right.setter
+    def right(self, v):
+        self._right = v
+
+    @property
+    def middle(self):
+        return self._middle
+
+    @middle.setter
+    def middle(self, v):
+        self._middle = v
+
+    @property
+    def is_end(self):
+        return self._is_end
+
+    @is_end.setter
+    def is_end(self, v):
+        self._is_end = v
+
+    def __str__(self):
+        return self._data
+
+    __repr__ = __str__
+
+class TernaryTree:
+    def __init__(self):
+        self._root = None
+
+    @property
+    def root(self):
+        return self._root
+
+    @root.setter
+    def root(self, v):
+        self._root = v
+
+    def _insert(self, node, word):
+        if len(word) == 0:
+            return
+
+        c = word[0]
+        if node is None:
+            node = TSTNode(c)
+
+        if ord(c) < ord(node.data):
+            node.left = self._insert(node.left, word)
+        elif ord(c) > ord(node.data):
+            node.right = self._insert(node.right, word)
+        else:
+            if len(word) > 1:
+                node.middle = self._insert(node.middle, word[1:])
+            else:
+                node.is_end = True
+
+        return node
+
+    def insert(self, words):
+        for word in words:
+            self._root = self._insert(self._root, word)
+
+    def search(self, word, node=None):
+        if node is None:
+            return False
+
+        c = word[0]
+        if ord(c) < ord(node.data):
+            self.search(node.left, word[1:])
+        elif ord(c) > ord(node.data):
+            self.search(node.right, word[1:])
+        else:
+            if node.is_end and len(word) == 0:
+                return True
+            elif len(word) == 0:
+                return False
+            else:
+                return self.search(node.middle, word[1:])
+
+    def get_suffixes(self, node, word, curr_string="", results=[]):
+        print(curr_string)
+        if node is None:
+            return
+
+        if len(word) == 0:
+            curr_string += node.data
+            if node.is_end:
+                results.append(curr_string)
+                return
+            else:
+                self.get_suffixes(node.left, [], curr_string, results)
+                self.get_suffixes(node.middle, [], curr_string, results)
+                self.get_suffixes(node.right, [], curr_string, results)
+                return
+
+        c = word[0]
+
+        if ord(c) < ord(node.data):
+            self.get_suffixes(node.left, word, curr_string, results)
+        elif ord(c) > ord(node.data):
+            self.get_suffixes(node.right, word, curr_string, results)
+        else:
+            curr_string += node.data
+            self.get_suffixes(node.middle, word[1:], curr_string, results)
+
+
 def get_ascii(char):
     return ord(char) - ord('a')
 
@@ -100,32 +229,43 @@ def incremental_search_trie(string, root):
 
     return new_results
 
+def incremental_search_ternary_tree(search_string, words):
+    ternary_tree = TernaryTree()
+    ternary_tree.insert(words)
+    results = []
+    ternary_tree.get_suffixes(ternary_tree.root, search_string, "", results)
+    return results
 
-def create_trie(words, root):
+def create_trie(words):
+    root = []
+    for i in range(0, 26):
+        root.append(Node(chr(i + ord('a')), None))
+
     for word in words:
-        word = word.rstrip('\n')
         root = trie(word, root)
 
     return root
 
 def read_dictionary(filename):
-    root = []
-    for i in range(0, 26):
-        root.append(Node(chr(i + ord('a')), None))
-
     f = open(filename)
     words = f.readlines()
     f.close()
 
-    root = create_trie(words, root)
-    return root
+    new_words = []
+    for word in words:
+        word = word.rstrip('\n')
+        new_words.append(word)
+
+    return new_words
 
 def main():
-    root = read_dictionary('wordsEn.txt')
-    string = input("String: ")
-    results = incremental_search_trie(string, root)
+    words = read_dictionary('wordsEn.txt')
+    search_string = input("String: ")
+    # root = create_trie(words)
+    # results = incremental_search_trie(string, root)
+    results1 = incremental_search_ternary_tree(search_string, words)
 
-    for result in results:
+    for result in results1:
         print(result)
 
 if __name__ == "__main__":
