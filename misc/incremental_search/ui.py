@@ -26,6 +26,7 @@ import sys
 from PySide import QtCore, QtGui
 from ternary_tree import *
 from trie import *
+import pickle
 
 def read_dictionary(filename):
     f = open(filename)
@@ -145,6 +146,12 @@ class MainWindow(QtGui.QWidget):
         self.button_dict_load = QtGui.QPushButton("Dict Load")
         self.button_dict_load.clicked.connect(self.load_dictionary)
 
+        self.button_pickle = QtGui.QPushButton("Pickle")
+        self.button_pickle.clicked.connect(self.pickle)
+
+        self.button_unpickle = QtGui.QPushButton("UnPickle")
+        self.button_unpickle.clicked.connect(self.unpickle)
+
         grid = QtGui.QGridLayout()
         grid.setSpacing(10)
 
@@ -161,12 +168,30 @@ class MainWindow(QtGui.QWidget):
         grid.addWidget(self.list_widget_results, 4, 1, 5, 1)
 
         grid.addWidget(self.button_dict_load, 5, 0)
+        grid.addWidget(self.button_pickle, 6, 0)
+        grid.addWidget(self.button_unpickle, 7, 0)
 
         self.setLayout(grid)
 
         self.setGeometry(300, 300, 350, 300)
         self.setWindowTitle('Incremental Search')
         self.show()
+
+    def pickle(self):
+        if self._trie is not None:
+            pickle.dump(self._trie, open( "trie.pickle", "wb" ))
+
+        if self._ternary_tree is not None:
+            pickle.dump(self._ternary_tree, open( "ternary_tree.pickle", "wb" ))
+
+    def unpickle(self):
+        self._trie = pickle.load(open('trie.pickle', 'rb'))
+        self._ternary_tree = pickle.load(open('ternary_tree.pickle', 'rb'))
+
+        if self.radio_button_trie.isChecked():
+            self._tree = self._trie
+        elif self.radio_button_ternary_tree.isChecked():
+            self._tree = self._ternary_tree
 
 def create_main_window():
     mw = MainWindow()
