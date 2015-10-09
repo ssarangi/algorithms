@@ -76,7 +76,7 @@ class MainWindow(QtGui.QWidget):
         search_string.strip()
         self.list_widget_results.clear()
 
-        if search_string is not None or search_string != '':
+        if search_string is not None and search_string != '':
             results = self._tree.search(search_string)
 
             for idx, result in enumerate(results):
@@ -87,7 +87,7 @@ class MainWindow(QtGui.QWidget):
         return False
 
     def load_dictionary(self):
-        self._words = read_dictionary('test.txt')
+        self._words = read_dictionary('wordsEn.txt')
         self._trie = None
         self._ternary_tree = None
 

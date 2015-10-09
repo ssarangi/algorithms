@@ -79,10 +79,6 @@ class TernaryTree:
     def root(self):
         return self._root
 
-    @root.setter
-    def root(self, v):
-        self._root = v
-
     def _insert(self, node, word):
         if len(word) == 0:
             return
@@ -104,11 +100,13 @@ class TernaryTree:
         return node
 
     def insert(self, word):
-        self._root = self._insert(self._root, word)
+        node = self._insert(self._root, word)
+        if self._root == None:
+            self._root = node
 
     def create(self, words):
         for word in words:
-            self._root = self._insert(self._root, word)
+            self._insert(self._root, word)
 
     # def search(self, word, node=None):
     #     if node is None:
