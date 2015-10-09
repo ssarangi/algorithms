@@ -22,34 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
 
-"""
-Main file for implementing all algorithms for incremental search.
-tries, suffix trees etc
-"""
-
-class Node:
-    def __init__(self, char, parent):
-        self._char = char
-        self._child_nodes = [None] * 26
-        self._parent = parent
-
-    @property
-    def parent(self):
-        return self._parent
-
-    @property
-    def char(self):
-        return self._char
-
-    @property
-    def children(self):
-        return self._child_nodes
-
-    def __str__(self):
-        return self._char
-
-    __repr__ = __str__
-
 class TSTNode:
     def __init__(self, char):
         self._data = char
@@ -131,7 +103,10 @@ class TernaryTree:
 
         return node
 
-    def insert(self, words):
+    def insert(self, word):
+        self._root = self._insert(self._root, word)
+
+    def create(self, words):
         for word in words:
             self._root = self._insert(self._root, word)
 
@@ -152,121 +127,33 @@ class TernaryTree:
             else:
                 return self.search(node.middle, word[1:])
 
-    def get_suffixes(self, node, word, curr_string="", results=[]):
-        print(curr_string)
+    def _get_suffixes(self, node, word, curr_string="", results=[]):
         if node is None:
             return
 
         if len(word) == 0:
-            curr_string += node.data
             if node.is_end:
-                results.append(curr_string)
-                return
-            else:
-                self.get_suffixes(node.left, [], curr_string, results)
-                self.get_suffixes(node.middle, [], curr_string, results)
-                self.get_suffixes(node.right, [], curr_string, results)
-                return
+                results.append(curr_string + node.data)
+
+            self._get_suffixes(node.left, "", curr_string, results)
+            self._get_suffixes(node.middle, "", curr_string + node.data, results)
+            self._get_suffixes(node.right, "", curr_string, results)
+            return
 
         c = word[0]
 
         if ord(c) < ord(node.data):
-            self.get_suffixes(node.left, word, curr_string, results)
+            self._get_suffixes(node.left, word, curr_string, results)
         elif ord(c) > ord(node.data):
-            self.get_suffixes(node.right, word, curr_string, results)
+            self._get_suffixes(node.right, word, curr_string, results)
         else:
             curr_string += node.data
-            self.get_suffixes(node.middle, word[1:], curr_string, results)
+            if node.is_end:
+                results.append(curr_string)
 
+            self._get_suffixes(node.middle, word[1:], curr_string, results)
 
-def get_ascii(char):
-    return ord(char) - ord('a')
-
-def get_character(ascii):
-    return chr(ascii + ord('a'))
-
-def trie(word, root):
-    nodes = root
-    parent = None
-    for c in word:
-        ascii = get_ascii(c)
-        current_node = nodes[ascii]
-
-        if current_node == None:
-            current_node = Node(c, parent)
-            nodes[ascii] = current_node
-
-        nodes = current_node.children
-        parent = current_node
-
-    return root
-
-def get_suffixes(node, result, curr_string):
-    is_leaf = True
-    for child in node.children:
-        if child is not None:
-            is_leaf = False
-            new_str = curr_string + child.char
-            get_suffixes(child, result, new_str)
-
-    if is_leaf:
-        result.append(curr_string)
-
-def incremental_search_trie(string, root):
-    results = []
-    nodes = root
-    print(nodes)
-    current_node = None
-    for c in string:
-        ascii = get_ascii(c)
-        current_node = nodes[ascii]
-
-    get_suffixes(current_node, results, "")
-
-    new_results = []
-    for result in results:
-        new_results.append(string + result)
-
-    return new_results
-
-def incremental_search_ternary_tree(search_string, words):
-    ternary_tree = TernaryTree()
-    ternary_tree.insert(words)
-    results = []
-    ternary_tree.get_suffixes(ternary_tree.root, search_string, "", results)
-    return results
-
-def create_trie(words):
-    root = []
-    for i in range(0, 26):
-        root.append(Node(chr(i + ord('a')), None))
-
-    for word in words:
-        root = trie(word, root)
-
-    return root
-
-def read_dictionary(filename):
-    f = open(filename)
-    words = f.readlines()
-    f.close()
-
-    new_words = []
-    for word in words:
-        word = word.rstrip('\n')
-        new_words.append(word)
-
-    return new_words
-
-def main():
-    words = read_dictionary('wordsEn.txt')
-    search_string = input("String: ")
-    # root = create_trie(words)
-    # results = incremental_search_trie(string, root)
-    results1 = incremental_search_ternary_tree(search_string, words)
-
-    for result in results1:
-        print(result)
-
-if __name__ == "__main__":
-    main()
+    def incremental_search(self, search_string):
+        results = []
+        self._get_suffixes(self._root, search_string, "", results)
+        return results
