@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
 
-from misc.incremental_search.utils import *
+from utils import *
 
 class Node:
     def __init__(self, char, parent):
@@ -68,6 +68,8 @@ class Trie:
         return self._root
 
     def _insert(self, word):
+        if word == '':
+            return
         nodes = self._root
         parent = None
         current_node = None
@@ -82,7 +84,8 @@ class Trie:
             nodes = current_node.children
             parent = current_node
 
-        current_node.is_end = True
+        if current_node is not None:
+            current_node.is_end = True
 
     def insert(self, word):
         self._insert(word)
@@ -93,23 +96,31 @@ class Trie:
 
     def _get_suffixes(self, node, result, curr_string):
         is_leaf = True
+
+        if node is None:
+            return
+
         for child in node.children:
             if child is not None:
                 is_leaf = False
                 new_str = curr_string + child.char
-                self.get_suffixes(child, result, new_str)
+                self._get_suffixes(child, result, new_str)
 
         if is_leaf or node.is_end:
             result.append(curr_string)
 
-    def incremental_search_trie(self, string):
+    def search(self, string):
         results = []
         nodes = self._root
         current_node = None
         for c in string:
             ascii = get_ascii(c)
             current_node = nodes[ascii]
-            nodes = current_node.children
+
+            if current_node is not None:
+                nodes = current_node.children
+            else:
+                return []
 
         self._get_suffixes(current_node, results, "")
 

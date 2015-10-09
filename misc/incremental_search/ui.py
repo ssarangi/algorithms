@@ -22,5 +22,123 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
 
+import sys
 from PySide import QtCore, QtGui
+from ternary_tree import *
+from trie import *
 
+def read_dictionary(filename):
+    f = open(filename)
+    words = f.readlines()
+    f.close()
+
+    new_words = []
+    for word in words:
+        word = word.rstrip('\n')
+        new_words.append(word)
+
+    return new_words
+
+class MainWindow(QtGui.QWidget):
+
+    def __init__(self):
+        super(MainWindow, self).__init__()
+        self.initUI()
+
+    def build_tree(self, words, algorithm):
+        tree = None
+        if algorithm == "trie":
+            tree = Trie()
+        elif algorithm == "ternary_tree":
+            tree = TernaryTree()
+        else:
+            print("No valid algorithm")
+
+        total_words = len(words)
+        for idx, word in enumerate(words):
+            percent = (idx / total_words) * 100
+            tree.insert(word)
+            self.setProgress(percent)
+
+        self.setProgress(0)
+        self.lineedit_search_bar.setFocus()
+
+        return tree
+
+    def keyPress(self):
+        search_string = self.lineedit_search_bar.text()
+        search_string.strip()
+        self.list_widget_results.clear()
+
+        if search_string is not None or search_string != '':
+            results = self._tree.search(search_string)
+
+            for idx, result in enumerate(results):
+                item = QtGui.QListWidgetItem()
+                item.setText(result)
+                self.list_widget_results.insertItem(idx, item)
+
+        return False
+
+    def load_dictionary(self):
+        words = read_dictionary('wordsEn.txt')
+        self._tree = self.build_tree(words, 'trie')
+
+    def setProgress(self, value):
+        if value > 100:
+            value = 100
+        self.progress_bar.setValue(value)
+
+    def initUI(self):
+        self.label_search_bar = QtGui.QLabel('Search Bar')
+        self.lineedit_search_bar = QtGui.QLineEdit()
+
+        self.lineedit_search_bar.textChanged.connect(self.keyPress)
+
+        groupBox = QtGui.QGroupBox("Exclusive Radio Buttons")
+        self.radio_button_trie = QtGui.QRadioButton('Trie')
+        self.radio_button_ternary_tree = QtGui.QRadioButton('Ternary Tree')
+        self.radio_button_trie.setChecked(True)
+
+        vbox = QtGui.QVBoxLayout()
+        vbox.addWidget(self.radio_button_trie)
+        vbox.addWidget(self.radio_button_ternary_tree)
+        vbox.addStretch(1)
+        groupBox.setLayout(vbox)
+
+        self.label_dictionary_load = QtGui.QLabel('Dict Load')
+        self.progress_bar = QtGui.QProgressBar()
+        self.progress_bar.setAlignment(QtCore.Qt.AlignCenter)
+
+        self.label_results = QtGui.QLabel('Results')
+        self.list_widget_results = QtGui.QListWidget()
+
+        self.button_dict_load = QtGui.QPushButton("Dict Load")
+        self.button_dict_load.clicked.connect(self.load_dictionary)
+
+        grid = QtGui.QGridLayout()
+        grid.setSpacing(10)
+
+        grid.addWidget(self.label_search_bar, 1, 0)
+        grid.addWidget(self.lineedit_search_bar, 1, 1)
+
+        grid.addWidget(self.label_dictionary_load, 2, 0)
+        grid.addWidget(self.progress_bar, 2, 1)
+
+        grid.addWidget(QtGui.QLabel("Tree Type"), 3, 0)
+        grid.addWidget(groupBox, 3, 1)
+
+        grid.addWidget(self.label_results, 4, 0)
+        grid.addWidget(self.list_widget_results, 4, 1, 5, 1)
+
+        grid.addWidget(self.button_dict_load, 5, 0)
+
+        self.setLayout(grid)
+
+        self.setGeometry(300, 300, 350, 300)
+        self.setWindowTitle('Incremental Search')
+        self.show()
+
+def create_main_window():
+    mw = MainWindow()
+    return mw

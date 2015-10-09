@@ -27,47 +27,17 @@ Main file for implementing all algorithms for incremental search.
 tries, suffix trees etc
 """
 
-from misc.incremental_search.ternary_tree import *
-from misc.incremental_search.trie import *
+from ternary_tree import *
+from trie import *
+from ui import *
 
-def build_tree(words, algorithm):
-    tree = None
-    if algorithm == "trie":
-        tree = Trie()
-    elif algorithm == "ternary_tree":
-        tree = TernaryTree()
-    else:
-        assert(0, "Not a valid algorithm")
-
-    tree.create(words)
-    return tree
-
-def incremental_search(tree, search_string):
-    results = tree.search(search_string)
-    return results
-
-def read_dictionary(filename):
-    f = open(filename)
-    words = f.readlines()
-    f.close()
-
-    new_words = []
-    for word in words:
-        word = word.rstrip('\n')
-        new_words.append(word)
-
-    return new_words
+from PySide import QtCore, QtGui
 
 def main():
-    words = read_dictionary('test.txt')
-    # search_string = input("String: ")
-    search_string = "ok"
-    root = create_trie(words)
-    results = incremental_search_trie(search_string, root)
-    # results1 = incremental_search_ternary_tree(search_string, words)
-
-    for result in results:
-        print(result)
+    app = QtGui.QApplication(sys.argv)
+    main_window = create_main_window()
+    main_window.show()
+    sys.exit(app.exec_())
 
 if __name__ == "__main__":
     main()
