@@ -110,22 +110,22 @@ class TernaryTree:
         for word in words:
             self._root = self._insert(self._root, word)
 
-    def search(self, word, node=None):
-        if node is None:
-            return False
-
-        c = word[0]
-        if ord(c) < ord(node.data):
-            self.search(node.left, word[1:])
-        elif ord(c) > ord(node.data):
-            self.search(node.right, word[1:])
-        else:
-            if node.is_end and len(word) == 0:
-                return True
-            elif len(word) == 0:
-                return False
-            else:
-                return self.search(node.middle, word[1:])
+    # def search(self, word, node=None):
+    #     if node is None:
+    #         return False
+    #
+    #     c = word[0]
+    #     if ord(c) < ord(node.data):
+    #         self.search(node.left, word[1:])
+    #     elif ord(c) > ord(node.data):
+    #         self.search(node.right, word[1:])
+    #     else:
+    #         if node.is_end and len(word) == 0:
+    #             return True
+    #         elif len(word) == 0:
+    #             return False
+    #         else:
+    #             return self.search(node.middle, word[1:])
 
     def _get_suffixes(self, node, word, curr_string="", results=[]):
         if node is None:
@@ -153,7 +153,7 @@ class TernaryTree:
 
             self._get_suffixes(node.middle, word[1:], curr_string, results)
 
-    def incremental_search(self, search_string):
+    def search(self, search_string):
         results = []
         self._get_suffixes(self._root, search_string, "", results)
         return results

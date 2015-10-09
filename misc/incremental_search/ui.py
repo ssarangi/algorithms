@@ -44,23 +44,29 @@ class MainWindow(QtGui.QWidget):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.initUI()
+        self._tree = None
+        self._trie = None
+        self._ternary_tree = None
+        self._words = None
 
     def build_tree(self, words, algorithm):
         tree = None
         if algorithm == "trie":
-            tree = Trie()
+            self._trie = Trie()
+            tree = self._trie
         elif algorithm == "ternary_tree":
-            tree = TernaryTree()
+            self._ternary_tree = TernaryTree()
+            tree = self._ternary_tree
         else:
             print("No valid algorithm")
 
-        total_words = len(words)
+        self.progress_bar.setFocus()
+        total_words = len(words) - 1
         for idx, word in enumerate(words):
             percent = (idx / total_words) * 100
             tree.insert(word)
             self.setProgress(percent)
 
-        self.setProgress(0)
         self.lineedit_search_bar.setFocus()
 
         return tree
@@ -81,13 +87,33 @@ class MainWindow(QtGui.QWidget):
         return False
 
     def load_dictionary(self):
-        words = read_dictionary('wordsEn.txt')
-        self._tree = self.build_tree(words, 'trie')
+        self._words = read_dictionary('test.txt')
+        self._trie = None
+        self._ternary_tree = None
+
+        if self.radio_button_trie.isChecked():
+            self._trie = self.build_tree(self._words, 'trie')
+            self._tree = self._trie
+        elif self.radio_button_ternary_tree.isChecked():
+            self._ternary_tree = self.build_tree(self._words, 'ternary_tree')
+            self._tree = self._ternary_tree
 
     def setProgress(self, value):
         if value > 100:
             value = 100
         self.progress_bar.setValue(value)
+
+    def changed_radio_button(self):
+        if self._words is not None:
+            if self.radio_button_trie.isChecked():
+                if self._trie == None:
+                    self.build_tree(self._words, 'trie')
+                self._tree = self._trie
+
+            if self.radio_button_ternary_tree.isChecked():
+                if self._ternary_tree == None:
+                    self.build_tree(self._words, 'ternary_tree')
+                self._tree = self._ternary_tree
 
     def initUI(self):
         self.label_search_bar = QtGui.QLabel('Search Bar')
@@ -99,6 +125,9 @@ class MainWindow(QtGui.QWidget):
         self.radio_button_trie = QtGui.QRadioButton('Trie')
         self.radio_button_ternary_tree = QtGui.QRadioButton('Ternary Tree')
         self.radio_button_trie.setChecked(True)
+
+        self.radio_button_trie.toggled.connect(self.changed_radio_button)
+        self.radio_button_ternary_tree.toggled.connect(self.changed_radio_button)
 
         vbox = QtGui.QVBoxLayout()
         vbox.addWidget(self.radio_button_trie)

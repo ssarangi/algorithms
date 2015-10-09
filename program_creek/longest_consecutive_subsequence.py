@@ -33,7 +33,14 @@ Your algorithm should run in O(n) complexity.
 """
 
 def longest_common_subsequence(arr):
-    pass
+    best_sum = 0
+    best_start_idx = 0
+    best_end_idx = 0
+
+    start_idx = 0
+    end_idx = 0
+    while end_idx < len(arr):
+
 
 import unittest
 
