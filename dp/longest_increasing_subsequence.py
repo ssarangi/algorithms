@@ -26,7 +26,11 @@ THE SOFTWARE.
 The longest Increasing Subsequence (LIS) problem is to find the length of the
 longest subsequence of a given sequence such that all elements of the subsequence
 are sorted in increasing order. For example, length of LIS for
-{ 10, 22, 9, 33, 21, 50, 41, 60, 80 } is 6 and LIS is {10, 22, 33, 50, 60, 80}.
+{ 0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15 } is 6 and LIS is {0, 2, 6, 9, 11, 15.}.
+The longest increasing subsequence problem is closely related to the longest
+common subsequence problem, which has a quadratic time dynamic programming solution:
+the longest increasing subsequence of a sequence S is the longest common subsequence of S and T,
+where T is the result of sorting S.
 """
 
 import sys
@@ -35,19 +39,7 @@ def longest_increasing_subsequence(arr):
     if len(arr) == 0 or len(arr) == 1:
         return arr
 
-    lis = [0] * len(arr)
-    lis_values = []
-    prev_num = -sys.maxsize
-    for idx, num in enumerate(arr):
-        if num > prev_num:
-            lis[idx] = lis[idx - 1] + 1
-            lis_values.append(num)
-        else:
-            lis[idx] = lis[idx - 1]
-
-        prev_num = num
-
-    return lis[-1]
+    assert(0, "Not implemented yet")
 
 import unittest
 
