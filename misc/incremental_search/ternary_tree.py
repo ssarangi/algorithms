@@ -146,7 +146,7 @@ class TernaryTree:
             self._get_suffixes(node.right, word, curr_string, results)
         else:
             curr_string += node.data
-            if node.is_end:
+            if node.is_end and len(word) == 0:
                 results.append(curr_string)
 
             self._get_suffixes(node.middle, word[1:], curr_string, results)
