@@ -32,12 +32,14 @@ from random import randint
 class KeyDoesntExistError(Exception):
     pass
 
+class NotImplementedException(Exception):
+    pass
+
 class HashTable:
     def __init__(self):
         self._table_size = 11
         self._num_occupied = 0
         self._storage = [None] * self._table_size
-        self._collision_resolve = [self._linear_probe_get, self._linear_probe_set]
 
     def _hash_function(self, item):
         return item % self._table_size
@@ -52,7 +54,49 @@ class HashTable:
         self._storage[hash_value] = value
 
     def _rehash(self, hash):
-        return (hash + 3) % self._table_size
+        pass
+
+    def _collision_resolve_set(self, hash, item, value):
+        pass
+
+    def _collision_resolve_get(self, hash, item):
+        pass
+
+    def __getitem__(self, item):
+        hash_value = self._hash_function(item)
+        v = self._get_from_storage(hash_value)
+        if v[0] != item:
+            return self._collision_resolve_get(hash_value, item)
+
+        if v == None:
+            raise KeyDoesntExistError("Key %s doesn't exist in hash table" % item)
+
+    def __setitem__(self, key, value):
+        hash_value = self._hash_function(key)
+        if self._get_from_storage(hash_value) is not None:
+            self._collision_resolve_set(hash_value, key, value)
+        else:
+            self._storage[hash_value] = (key,value)
+
+        self._num_occupied += 1
+
+    def get_or_none(self, key):
+        hash_value = self._hash_function(key)
+        v = self._get_from_storage(hash_value)
+        return v
+
+class HashTableWithLinearProbing(HashTable):
+    def __init__(self):
+        HashTable.__init__(self)
+
+    def _rehash(self, hash):
+        return (hash + 1) % self._table_size
+
+    def _collision_resolve_set(self, hash, item, value):
+        self._linear_probe_set(hash, item, value)
+
+    def _collision_resolve_get(self, hash, item):
+        return self._linear_probe_get(hash, item)
 
     def _linear_probe_set(self, hash, item, value):
         """
@@ -89,32 +133,8 @@ class HashTable:
             if hash >= self._table_size - 1:
                 hash = 0
 
-
-    def __getitem__(self, item):
-        hash_value = self._hash_function(item)
-        v = self._get_from_storage(hash_value)
-        if v[0] != item:
-            return self._collision_resolve[0](hash_value, item)
-
-        if v == None:
-            raise KeyDoesntExistError("Key %s doesn't exist in hash table" % item)
-
-    def __setitem__(self, key, value):
-        hash_value = self._hash_function(key)
-        if self._get_from_storage(hash_value) is not None:
-            self._collision_resolve[1](hash_value, key, value)
-        else:
-            self._storage[hash_value] = (key,value)
-
-        self._num_occupied += 1
-
-    def get_or_none(self, key):
-        hash_value = self._hash_function(key)
-        v = self._get_from_storage(hash_value)
-        return v
-
 def main():
-    h = HashTable()
+    h = HashTableWithLinearProbing()
     # random_numbers = [randint(0, 100) for i in range(0, 100)]
     numbers = [54,26,93,17,77,31,44,55,20]
     for rn in numbers:
