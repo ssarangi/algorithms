@@ -31,6 +31,9 @@ class Node:
         self._children = []
         self._order = order
 
+    def __lt__(self, other):
+        return self._data[0] < other.data[0]
+
     @property
     def order(self):
         return self._order
@@ -51,18 +54,28 @@ class Node:
     def data(self, v):
         self._data = v
 
-    def add_data(self, v):
-        if len(self._children) == 0:
-            heapq.heappush(self._data, v)
+    @property
+    def children(self):
+        return self._children
+
+    def add_data(self, v, force_add = False):
+        if len(self._children) == 0 or force_add:
+            self._data.append(v)
+            self._data = sorted(self._data)
+            self._children = sorted(self._children)
+
             if len(self._data) == self._order:
                 self._split()
         else:
-            child_idx = 0
+            child_idx = -1
             # This needs to be added to the children
             for idx, c in enumerate(self._data):
                 if ord(v) < ord(c):
                     child_idx = idx
                     break
+
+            if child_idx == -1:
+                child_idx = len(self._data)
 
             self._children[child_idx].add_data(v)
 
@@ -72,27 +85,84 @@ class Node:
 
         # If the parent is not present then the splitting happens
         # differently.
-        if self._parent is None:
-            lhs = Node(self._order)
-            rhs = Node(self._order)
+        lhs = Node(self._order)
+        rhs = Node(self._order)
+
+        remove_data = []
+        for i in range(0, center):
+            c = self._data[i]
+            lhs.add_data(c)
+            remove_data.append(c)
+
+        for i in range(center + 1, len(self._data)):
+            c = self._data[i]
+            rhs.add_data(c)
+            remove_data.append(c)
+
+        for c in remove_data:
+            self._data.remove(c)
+
+        for i in range(0, len(self._children)):
+            if i < int(len(self._children) / 2):
+                lhs.children.append(self._children[i])
+            else:
+                rhs.children.append(self._children[i])
+
+        if self._parent is not None:
+            lhs.parent = self._parent
+            rhs.parent = self._parent
+            # This needs to be added to its parent
+            self._parent.children.append(lhs)
+            self._parent.children.append(rhs)
+            self._parent.children.remove(self) # Remove the current node since we are adding it to parent
+            self._parent.add_data(self._data[0], force_add=True)
+        else:
+            self._children.clear()
             self._children.append(lhs)
             self._children.append(rhs)
+            lhs.parent = self
+            rhs.parent = self
 
-            remove_data = []
-            for i in range(0, center):
-                c = self._data[i]
-                lhs.add_data(c)
-                remove_data.append(c)
+    def binary_search(seq, t):
+        min = 0
+        max = len(seq) - 1
+        while True:
+            if max < min:
+                return -1
+            m = (min + max) // 2
+            if seq[m] < t:
+                min = m + 1
+            elif seq[m] > t:
+                max = m - 1
+            else:
+                return m
 
-            for i in range(center + 1, len(self._data)):
-                c = self._data[i]
-                rhs.add_data(c)
-                remove_data.append(c)
+    def search(self, data):
+        start = 0
+        end = len(self._data) - 1
+        center = 0
 
-            for c in remove_data:
-                self._data.remove(c)
-        else:
-            pass
+        if len(self._data) == 1:
+            if self._data[0] == data:
+                return self
+            elif data < self._data[0]:
+                center = 0
+            else:
+                center = 1
+
+        while abs(end - start) > 0:
+            center = int((start + end) / 2)
+            if ord(self._data[center]) < ord(data):
+                end = center
+            elif ord(self._data[center]) > ord(data):
+                start = center
+            else:
+                return self
+
+        return self._children[center].search(data)
+
+    def delete(self, node):
+        pass
 
     def __str__(self):
         return str(self._data)
@@ -105,6 +175,9 @@ def main():
 
     for c in str:
         root.add_data(c)
+
+    search_node = root.search('K')
+    print(search_node)
 
 
 if __name__ == "__main__":
