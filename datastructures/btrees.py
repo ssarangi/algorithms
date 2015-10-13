@@ -64,7 +64,7 @@ class Node:
                     child_idx = idx
                     break
 
-            
+            self._children[child_idx].add_data(v)
 
     def _split(self):
         center = int(self._order / 2)
