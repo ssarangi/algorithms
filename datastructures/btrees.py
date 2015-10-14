@@ -123,43 +123,20 @@ class Node:
             lhs.parent = self
             rhs.parent = self
 
-    def binary_search(seq, t):
+    def search(self, data):
+        seq = self._data
         min = 0
         max = len(seq) - 1
         while True:
             if max < min:
-                return -1
+                return self._children[min].search(data)
             m = (min + max) // 2
-            if seq[m] < t:
+            if seq[m] < data:
                 min = m + 1
-            elif seq[m] > t:
+            elif seq[m] > data:
                 max = m - 1
             else:
-                return m
-
-    def search(self, data):
-        start = 0
-        end = len(self._data) - 1
-        center = 0
-
-        if len(self._data) == 1:
-            if self._data[0] == data:
                 return self
-            elif data < self._data[0]:
-                center = 0
-            else:
-                center = 1
-
-        while abs(end - start) > 0:
-            center = int((start + end) / 2)
-            if ord(self._data[center]) < ord(data):
-                end = center
-            elif ord(self._data[center]) > ord(data):
-                start = center
-            else:
-                return self
-
-        return self._children[center].search(data)
 
     def delete(self, node):
         pass
@@ -176,7 +153,7 @@ def main():
     for c in str:
         root.add_data(c)
 
-    search_node = root.search('K')
+    search_node = root.search('P')
     print(search_node)
 
 
