@@ -25,14 +25,24 @@ THE SOFTWARE.
 import heapq
 
 class Node:
-    def __init__(self, order):
+    def __init__(self, min_degree):
         self._parent = None
         self._data = []
         self._children = []
-        self._order = order
+        self._min_degree = min_degree
+        self._order = (min_degree + 1) // 2
+        self._is_leaf = True
 
     def __lt__(self, other):
         return self._data[0] < other.data[0]
+
+    @property
+    def isleaf(self):
+        return self._is_leaf
+
+    @isleaf.setter
+    def isleaf(self, v):
+        self._is_leaf = v
 
     @property
     def order(self):
@@ -57,6 +67,9 @@ class Node:
     @property
     def children(self):
         return self._children
+
+    def has_sufficient_keys(self):
+        return len(self._data) >= (self._min_degree - 1)
 
     def add_data(self, v, force_add = False):
         if len(self._children) == 0 or force_add:
@@ -122,6 +135,20 @@ class Node:
             self._children.append(rhs)
             lhs.parent = self
             rhs.parent = self
+            self._is_leaf = False
+
+    def find_predecessor(self):
+        if self._is_leaf == True:
+            return self, self.data[len(self.data) - 1]
+        else:
+            node = self._children[len(self._children) - 1]
+            return node.find_predecessor()
+
+    def find_successor(self, node):
+        if self._is_leaf == True:
+            return self, self.data[0]
+        else:
+            return self.find_successor(self.children[0])
 
     def search(self, data):
         seq = self._data
@@ -136,10 +163,39 @@ class Node:
             elif seq[m] > data:
                 max = m - 1
             else:
-                return self
+                return (self, m)
 
-    def delete(self, node):
-        pass
+    def delete(self, data):
+        node, pos = self.search(data)
+        # Case 1: If the key is in node and node is a leaf, delete the key
+        if node.isleaf:
+            node.data.remove(data)
+        else:
+            # Case 2: node is not a leaf node.
+            # Case a: the left child of the data has atleast min_degree - 1 nodes
+            if node.children[pos].has_sufficient_keys():
+                pnode, predecessor = node.find_predecessor()
+                pnode.delete(predecessor)
+            elif not node.children[pos].has_sufficient_keys() and node.children[pos+1].has_sufficient_keys():
+                pnode, successor = node.find_successor()
+                pnode.delete(successor)
+            elif len(node.children[pos].data) == self._min_degree - 1 and len(node.children[pos+1].data) == self._min_degree - 1:
+                left = node.children[pos]
+                right = node.children[pos+1]
+
+                left.data.append(node.data[pos])
+                node.data.remove(node.data[pos])
+
+                for c in right.data:
+                    left.data.append(c)
+
+                for child in right.children:
+                    left.children.append(child)
+
+                # Now delete the original node
+                node.children.remove(right)
+                node.delete(data)
+
 
     def __str__(self):
         return str(self._data)
@@ -148,13 +204,14 @@ class Node:
 
 def main():
     str = ["A","G","F","B","K","D","H","M","J","E","S","I","R","X","C","L","N","T","U","P"]
-    root = Node(5)
+    root = Node(3)
 
     for c in str:
         root.add_data(c)
 
-    search_node = root.search('P')
-    print(search_node)
+    search_node, loc = root.search('P')
+    print(search_node, loc)
+    root.delete('P')
 
 
 if __name__ == "__main__":
