@@ -172,7 +172,6 @@ class RBTree:
         else:
             inserted_node = self._insert(data, self._root)
 
-        print("Inserting: %s" % data)
         # Check if the parent of current node is not Black or x is root
         while inserted_node != self._root and inserted_node.parent.color != RBTreeNode.BLACK:
             # If inserted_node's uncle is red
@@ -226,6 +225,38 @@ class RBTree:
                 grand_parent.color, parent.color = parent.color, grand_parent.color
 
         self._root.color = RBTreeNode.BLACK
+
+    def search(self, data, node=None):
+        if node == None:
+            node = self._root
+
+        if node == None or isinstance(node, NullNode):
+            return None
+
+        if data < node.data:
+            return self.search(node.left)
+        else:
+            return self.search(node.right)
+
+
+    def find_predecessor(self, node):
+        if isinstance(node.right, NullNode):
+            return node
+        else:
+            return self.find_predecessor(node.right)
+
+    def find_successor(self, node):
+        if isinstance(node.left, NullNode):
+            return node
+        else:
+            return self.find_successor(node.left)
+
+    def delete(self, data):
+        node = self.search(data)
+        if node == None:
+            return
+
+
 
 
 def main():
