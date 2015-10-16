@@ -233,13 +233,19 @@ class RBTree:
         if node == None or isinstance(node, NullNode):
             return None
 
+        if node.data == data:
+            return node
+
         if data < node.data:
-            return self.search(node.left)
+            return self.search(data, node.left)
         else:
-            return self.search(node.right)
+            return self.search(data, node.right)
 
 
     def find_predecessor(self, node):
+        if isinstance(node, NullNode):
+            return None
+
         if isinstance(node.right, NullNode):
             return node
         else:
@@ -256,8 +262,16 @@ class RBTree:
         if node == None:
             return
 
+        predecessor = self.find_predecessor(node.left)
 
-
+        if predecessor is not None:
+            node.data = predecessor.data
+            predecessor.parent.right = NullNode()
+        else:
+            if node.parent.left == node:
+                node.parent.left = node.left
+            else:
+                node.parent.right = node.left
 
 def main():
     rbtree = RBTree()
@@ -265,6 +279,8 @@ def main():
     arr = [3, 7, 10, 8, 11, 22, 26, 18, 2, 7, 13]
     for item in arr:
         rbtree.insert(item)
+
+    rbtree.delete(8)
 
 if __name__ == "__main__":
     main()
