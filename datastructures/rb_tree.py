@@ -34,6 +34,11 @@ class NullNode:
     def color(self):
         return self._color
 
+    def __str__(self):
+        return "NullNode"
+
+    __repr__ = __str__
+
 class RBTreeNode:
     BLACK = 'black'
     RED   = 'red'
@@ -104,7 +109,7 @@ class RBTree:
             if isinstance(node.left, NullNode):
                 node.left = inserted_node
                 node.left.parent = node
-        elif data > node.data:
+        else:
             inserted_node = self._insert(data, node.right)
             if isinstance(node.right, NullNode):
                 node.right = inserted_node
@@ -118,7 +123,15 @@ class RBTree:
         #                P        C      -->      A    node
         #               / \                           /    \
         #              A   B                         B      C
+
         left_child = node.left
+
+        if node.parent is not None:
+            if node.parent.left == node:
+                node.parent.left = left_child
+            else:
+                node.parent.right = left_child
+
         node.left = left_child.right
         left_child.parent = node.parent
         left_child.right = node
@@ -134,7 +147,15 @@ class RBTree:
         #                P        C      <--      A    node
         #               / \                           /    \
         #              A   B                         B      C
+
         right_child = node.right
+
+        if node.parent is not None:
+            if node.parent.left == node:
+                node.parent.left = right_child
+            else:
+                node.parent.right = right_child
+
         node.right = right_child.left
         right_child.parent = node.parent
         right_child.left = node
@@ -151,6 +172,7 @@ class RBTree:
         else:
             inserted_node = self._insert(data, self._root)
 
+        print("Inserting: %s" % data)
         # Check if the parent of current node is not Black or x is root
         while inserted_node != self._root and inserted_node.parent.color != RBTreeNode.BLACK:
             # If inserted_node's uncle is red
