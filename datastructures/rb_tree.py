@@ -27,12 +27,25 @@ Red Black Trees
 """
 
 class NullNode:
-    def __init__(self):
+    def __init__(self, parent):
         self._color = RBTreeNode.BLACK
+        self._parent = parent
 
     @property
     def color(self):
         return self._color
+
+    @color.setter
+    def color(self, c):
+        self._color = c
+
+    @property
+    def parent(self):
+        return self._parent
+
+    @parent.setter
+    def parent(self, p):
+        self._parent = p
 
     def __str__(self):
         return "NullNode"
@@ -42,12 +55,15 @@ class NullNode:
 class RBTreeNode:
     BLACK = 'black'
     RED   = 'red'
+    DOUBLE_BLACK = "black black"
+    LEFT  = 'left'
+    RIGHT = 'right'
 
     def __init__(self, data, color):
         self._color = color
         self._data = data
-        self._left = NullNode()
-        self._right = NullNode()
+        self._left = NullNode(self)
+        self._right = NullNode(self)
         self._parent = None
 
     @property
@@ -89,6 +105,59 @@ class RBTreeNode:
     @parent.setter
     def parent(self, p):
         self._parent = p
+
+    def sibling(self, node):
+        if self.left == node:
+            return self.right
+        else:
+            return self.left
+
+    def has_one_child(self):
+        if not isinstance(self.left, NullNode) and isinstance(self.right, NullNode):
+            return RBTreeNode.LEFT
+        elif isinstance(self.right, NullNode) and not isinstance(self.right, NullNode):
+            return RBTreeNode.RIGHT
+        else:
+            return None
+
+    def get_child(self, loc):
+        if loc == RBTreeNode.LEFT:
+            return self._left
+        elif loc == RBTreeNode.RIGHT:
+            return self._right
+        else:
+            raise Exception("Invalid Location")
+
+    def is_leaf(self):
+        return isinstance(self._left, NullNode) and isinstance(self._right, NullNode)
+
+    def get_child_loc(self, child):
+        if self.left == child:
+            return RBTreeNode.LEFT
+        elif self.right == child:
+            return RBTreeNode.RIGHT
+        else:
+            raise Exception("Child node is not in parent")
+
+    def remove_child(self, child_node):
+        loc = self.get_child_loc(child_node)
+
+        if loc == RBTreeNode.LEFT:
+            self.left = NullNode(self)
+        elif loc == RBTreeNode.RIGHT:
+            self.right = NullNode(self)
+
+        return loc
+
+    def add_child(self, child, location):
+        if location == RBTreeNode.LEFT:
+            self.left = child
+        elif location == RBTreeNode.RIGHT:
+            self.right = child
+        else:
+            raise Exception("Invalid Location specified")
+
+        child.parent = self
 
     def __str__(self):
         return str(self.data) + "::" + self._color
@@ -257,30 +326,72 @@ class RBTree:
         else:
             return self.find_successor(node.left)
 
+    # def delete(self, data):
+    #     node = self.search(data)
+    #     if node == None:
+    #         return
+    #
+    #     predecessor = self.find_predecessor(node.left)
+    #
+    #     if predecessor is not None:
+    #         node.data = predecessor.data
+    #         predecessor.parent.right = NullNode()
+    #     else:
+    #         if node.parent.left == node:
+    #             node.parent.left = node.left
+    #         else:
+    #             node.parent.right = node.left
+
     def delete(self, data):
         node = self.search(data)
-        if node == None:
-            return
-
-        predecessor = self.find_predecessor(node.left)
-
-        if predecessor is not None:
-            node.data = predecessor.data
-            predecessor.parent.right = NullNode()
-        else:
-            if node.parent.left == node:
-                node.parent.left = node.left
+        # Now since delete is called recursively for internal nodes, we only have to handle
+        # the case where the node is either a leaf node or has one child
+        if node.is_leaf() or node.has_one_child():
+            child = None
+            if node.is_leaf():
+                child = node.left
             else:
-                node.parent.right = node.left
+                loc = node.has_one_child()
+                child = node.get_child(loc)
+
+            # Case where either node or child is RED
+            if ((child.color == RBTreeNode.RED and node.color == RBTreeNode.BLACK) or
+               (child.color == RBTreeNode.BLACK and node.color == RBTreeNode.RED)):
+                parent = node.parent
+                loc = parent.remove_child(node)
+                parent.add_child(child, loc)
+                child.color = RBTreeNode.BLACK
+            # case where both node and child are BLACK
+            elif (child.color == RBTreeNode.BLACK and node.color == RBTreeNode.BLACK):
+                # Color node as DOUBLE_BLACK
+                parent = node.parent
+                child.color = RBTreeNode.DOUBLE_BLACK
+                sibling = parent.sibling(node)
+                loc = parent.remove_child(node)
+                parent.add_child(child, loc)
+
+                current_node = child
+                self.rotate_left(sibling)
+        else:
+            # Node has both children
+            predecessor = self.find_predecessor(node.right)
+            node.data = predecessor.data
+            self.delete(predecessor.data)
+
+
+
 
 def main():
     rbtree = RBTree()
     # arr = [10,20,30,15]
-    arr = [3, 7, 10, 8, 11, 22, 26, 18, 2, 7, 13]
+    # arr = [3, 7, 10, 8, 11, 22, 26, 18, 2, 7, 13]
+    # arr = range(0, 10)
+    arr = [30, 20, 40, 35, 50]
+
     for item in arr:
         rbtree.insert(item)
 
-    rbtree.delete(8)
+    rbtree.delete(20)
 
 if __name__ == "__main__":
     main()
