@@ -84,9 +84,7 @@ class BinarySearchTree:
             return None
 
     def __contains__(self, item):
-        if self._get(item, self.root):
-
-
+        pass
 
 class Node:
     def __init__(self, key, val, left=None, right=None, parent=None):
