@@ -23,36 +23,24 @@ THE SOFTWARE.
 """
 
 """
-https://www.hackerrank.com/challenges/stockmax
+https://www.hackerrank.com/challenges/unbounded-knapsack
 """
 
+def knapsack():
+    pass
+
 import sys
-
-def stock_maximize(stock_prices):
-    """
-    Basically find the max price from the farthest days and then buy on all days before it.
-    Do nothing is never used. We either buy or sell always. Do not confuse.
-    :param stock_prices:
-    :return:
-    """
-    profit = 0
-    max_current_future_price = 0
-    from_back = stock_prices
-    from_back.reverse()
-    for price in from_back:
-        max_current_future_price = max(max_current_future_price, price)
-        profit += max_current_future_price - price
-
-    return profit
 
 def read(read_fn):
     test_cases = []
     T = int(read_fn())
     for i in range(0, T):
-        N = int(read_fn())
-        prices = read_fn()
-        prices = [int(price) for price in prices.split(" ")]
-        test_cases.append(prices)
+        line = read_fn().split(" ")
+        N = int(line[0])
+        k = int(line[1])
+        a = read_fn()
+        els = [int(price) for price in a.split(" ")]
+        test_cases.append((k, els))
 
     return test_cases
 
@@ -64,7 +52,7 @@ def main():
         test_cases = read(input)
 
     for prices in test_cases:
-        profit = stock_maximize(prices)
+        profit, transactions = knapsack()
         print(profit)
 
 if __name__ == "__main__":
