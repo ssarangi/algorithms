@@ -26,8 +26,48 @@ THE SOFTWARE.
 https://www.hackerrank.com/challenges/red-john-is-back
 """
 
+import math
+
+def is_prime(num):
+    if num == 0 or num == 1:
+        return False
+
+    if num == 2 or num == 3:
+        return True
+
+    for i in range(2, math.ceil(math.sqrt(num)) + 1):
+        if num % i == 0:
+            return False
+
+    return True
+
+def num_primes(num):
+    primes = 0
+    for i in range(0, num + 1):
+        if is_prime(i):
+            primes += 1
+
+    return primes
+
+def total_ways_to_fill(current_size):
+    if current_size < 4:
+        return 1
+    elif current_size == 4:
+        return 2
+    else:
+        return total_ways_to_fill(current_size - 1) + total_ways_to_fill(current_size - 4)
+
 def red_john_is_back(N):
-    pass
+    """
+    This is a knapsack problem
+    Basically here the idea is since the height is always 4 so we can ignore that.
+    So its the width. Now the width can be fit by either bricks of width 1 or 4
+    :param N:
+    :return:
+    """
+    total_ways = total_ways_to_fill(N)
+    primes = num_primes(total_ways)
+    return primes
 
 import sys
 
