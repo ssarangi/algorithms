@@ -265,39 +265,20 @@ class BinaryTree:
 
             return condition1 and condition2
 
-def main():
-    binary_tree = BinaryTree()
-    input = [17, 5, 35, 2, 16, 29, 38, 33, 19, 36, 40]
+    def min(self):
+        cn = self.__root
+        min_v = None
+        while cn is not None:
+            min_v = cn.data
+            cn = cn.left
 
-    print("Print by Level:")
-    for i in input:
-        binary_tree.add_data(i)
+        return min_v
 
-    binary_tree.print_by_level()
+    def max(self):
+        cn = self.__root
+        max_v = None
+        while cn is not None:
+            max_v = cn.data
+            cn = cn.right
 
-    print("Search Result:")
-    node = binary_tree.search(16)
-    if node is not None:
-        print(node)
-
-    print("Predecessor:")
-    predecessor = binary_tree.predecessor(binary_tree.root)
-    print(predecessor)
-
-    print("Successor:")
-    successor = binary_tree.successor(binary_tree.root)
-    print(successor)
-
-    print("Deleting Node 29:")
-    node = binary_tree.search(36)
-    binary_tree.delete(node)
-    binary_tree.print_by_level()
-
-    print("Is Tree Full:")
-    print(binary_tree.is_full(binary_tree.root))
-
-    print("Is Tree Complete:")
-    print(binary_tree.is_complete(binary_tree.root))
-
-if __name__ == "__main__":
-    main()
+        return max_v
