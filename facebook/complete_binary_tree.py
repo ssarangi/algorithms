@@ -175,9 +175,6 @@ class BinaryTree:
             node.data = predecessor.data
             self.delete(predecessor)
 
-    def is_complete(self):
-        pass
-
     # A full binary tree (sometimes a proper binary tree or 2-tree is a tree in which every node other than the leaves
     # has 2 children. Diagram below
     #                                           N
