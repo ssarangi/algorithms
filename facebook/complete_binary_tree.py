@@ -178,6 +178,68 @@ class BinaryTree:
     def is_complete(self):
         pass
 
+    # A full binary tree (sometimes a proper binary tree or 2-tree is a tree in which every node other than the leaves
+    # has 2 children. Diagram below
+    #                                           N
+    #                                          / \
+    #                                        N     N
+    #                                       / \   / \
+    #                                      N  N  N   N
+    def is_full(self, node=None):
+        if node is None:
+            return True
+
+        if node.left is None and node.right is not None:
+            return False
+        elif node.left is not None and node.right is None:
+            return False
+        else:
+            return self.is_full(node.left) and self.is_full(node.right)
+
+    def is_complete(self, node=None):
+        """
+        # The following trees are examples of Complete Binary Trees
+        #     1
+        #   /   \
+        #  2     3
+        #
+        #        1
+        #     /    \
+        #    2       3
+        #   /
+        #  4
+        #
+        #        1
+        #     /    \
+        #    2      3
+        #   /  \    /
+        #  4    5  6
+
+        # The following trees are examples of Non-Complete Binary Trees
+        #     1
+        #       \
+        #        3
+        #
+        #        1
+        #     /    \
+        #    2       3
+        #     \     /  \
+        #      4   5    6
+        #
+        #        1
+        #     /    \
+        #    2      3
+        #          /  \
+        #         4    5
+        """
+        if node is None:
+            return True
+
+        if node.left is None and node.right is not None:
+            return False
+        else:
+            return self.is_complete(node.left) and self.is_complete(node.right)
+
 def main():
     binary_tree = BinaryTree()
     input = [17, 5, 35, 2, 16, 29, 38, 33, 19, 36, 40]
@@ -202,9 +264,15 @@ def main():
     print(successor)
 
     print("Deleting Node 29:")
-    node = binary_tree.search(35)
+    node = binary_tree.search(36)
     binary_tree.delete(node)
     binary_tree.print_by_level()
+
+    print("Is Tree Full:")
+    print(binary_tree.is_full(binary_tree.root))
+
+    print("Is Tree Complete:")
+    print(binary_tree.is_complete(binary_tree.root))
 
 if __name__ == "__main__":
     main()
