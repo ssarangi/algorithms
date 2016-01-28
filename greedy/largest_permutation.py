@@ -22,41 +22,53 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
 
-"""
-https://www.hackerrank.com/challenges/equal
-"""
-
-def equal(chocolates):
-    num_ppl = len(chocolates)
-    possibilities = [1, 2, 5]
-    r = [0] * (num_ppl + 1)
-
-    for p in range(0, num_ppl):
-        for c in possibilities:
-            pass
+# LINK: https://www.hackerrank.com/challenges/largest-permutation
 
 import sys
 
-def read(read_fn):
-    test_cases = []
-    T = int(read_fn())
-    for i in range(0, T):
-        N = int(read_fn())
-        chocolates = [int(c) for c in read_fn().split(" ")]
-        test_cases.append(chocolates)
+def find_largest(natural_nums):
+    max_num = natural_nums[0]
+    loc = 0
+    for i in range(1, len(natural_nums)):
+        if max_num < natural_nums[i]:
+            max_num = natural_nums[i]
+            loc = i
 
-    return test_cases
+    return max_num, loc
+
+def largest_permutation_brute_force(K, natural_nums):
+    """
+    Figure out the largest permutated number that can be generated given K and a bunch of natural nums
+    :param K: Number of swaps allowed
+    :param natural_nums: the digits which can be swapped
+    :return: The largest number
+    """
+    for swaps in range(0, K):
+        largest, loc = find_largest(natural_nums)
+        # Swap the 2 numbers
+        natural_nums[0], natural_nums[loc] = natural_nums[loc], natural_nums[0]
+
+    return natural_nums
+
+
+def read(read_fn):
+    first_line = read_fn().split(" ")
+    N = int(first_line[0])
+    K = int(first_line[1])
+
+    natural_nums = [int(num) for num in read_fn().split(" ")]
+
+    return K, natural_nums
 
 def main():
     if len(sys.argv) > 1:
         with open(sys.argv[1]) as f:
-            test_cases = read(f.readline)
+            K, natural_nums = read(f.readline)
     else:
-        test_cases = read(input)
+        K, natural_nums = read(input)
 
-    for N in test_cases:
-        output = equal(N)
-        print(output)
+    output = largest_permutation_brute_force(K, natural_nums)
+    print(output)
 
 if __name__ == "__main__":
     main()
