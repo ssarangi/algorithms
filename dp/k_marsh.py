@@ -28,25 +28,9 @@ https://www.hackerrank.com/challenges/mr-k-marsh
 
 import sys
 
-
-def find_max_perimeter(grid, x, y):
-    l_max_width = 0
-    l_max_height = 0
-    for i in range(y, len(grid)):
-        if grid[i][x] == '.':
-            l_max_height += 1
-        else:
-            break
-
-    for i in range(x, len(grid[0])):
-        if grid[y][i] == '.':
-            l_max_width += 1
-        else:
-            break
-
-    perimeter = 2 * (l_max_width - 1) + 2 * (l_max_height - 1)
-    return perimeter, l_max_width - 1, l_max_height - 1
-
+def create_2d_arr(width, height):
+    arr = [[0 for i in range(0, width)] for j in range(0, height)]
+    return arr
 
 def max_width(grid, x, y, grid_max_width):
     if grid[y][x] == 'x':
@@ -91,19 +75,11 @@ def k_marsh(grid, x, y, grid_max_width, grid_max_height):
 
     for ix in reversed(range(0, grid_cols)):
         for iy in reversed(range(0, grid_rows)):
-            if ix == 205 and iy == 57:
-                a = 10
-
-            if ix == 207 and iy == 57:
-                b = 10
-
             mw = max_width(grid, ix, iy, grid_max_width)
             mh = min(max_height(grid, ix, iy, grid_max_height), max_height(grid, ix+mw, iy, grid_max_height))
 
             grid_max_width[iy][ix] = mw
             grid_max_height[iy][ix] = mh
-
-            print(grid_max_width[57][207])
 
             current_perimeter = 0
             if grid_max_width[iy][ix] > 0 and grid_max_height[iy][ix] > 0:
@@ -117,38 +93,14 @@ def k_marsh(grid, x, y, grid_max_width, grid_max_height):
                 max_h = grid_max_height[iy][ix]
 
             perimeter = max(perimeter, current_perimeter)
-            if ix == 205 and iy == 57:
-                print_grid(grid, ix, iy, max_w, max_h)
 
     if perimeter == 0:
         perimeter = "impossible"
 
-    print("From DP: Max X: %s\tMax Y: %s\tPerimeter: %s\tMax W: %s\tMax H: %s" % (max_x, max_y, perimeter, max_w, max_h))
-    print_grid(grid, ix, iy, max_w, max_h)
+    # print("From DP: Max X: %s\tMax Y: %s\tPerimeter: %s\tMax W: %s\tMax H: %s" % (max_x, max_y, perimeter, max_w, max_h))
+    # print_grid(grid, ix, iy, max_w, max_h)
 
     return perimeter
-
-
-def fn_max_perimeter(grid):
-    max_p = 0
-    max_x = -1
-    max_y = -1
-    max_w = -1
-    max_h = -1
-
-    for y in range(0, len(grid)):
-        for x in range(0, len(grid[0])):
-            perimeter, mw, mh = find_max_perimeter(grid, x, y)
-
-            if perimeter > max_p:
-                max_p = perimeter
-                max_x = x
-                max_y = y
-                max_w = mw
-                max_h = mh
-
-    print( "From BF: Max X: %s\tMax Y: %s\tPerimeter: %s\tMax_W: %s\tMax_H: %s" % (max_x, max_y, max_p, max_w, max_h))
-
 
 def read(read_fn):
     m, n = [int(v) for v in read_fn().split(" ")]
@@ -170,8 +122,8 @@ def main():
     grid_rows = len(grid)
     grid_cols = len(grid[0])
 
-    grid_max_width = [[0] * grid_cols] * grid_rows
-    grid_max_height = [[0] * grid_cols] * grid_rows
+    grid_max_width = create_2d_arr(grid_cols, grid_rows)
+    grid_max_height = create_2d_arr(grid_cols, grid_rows)
 
     max_perimeter = k_marsh(grid, 0, 0, grid_max_width, grid_max_height)
     print(max_perimeter)
