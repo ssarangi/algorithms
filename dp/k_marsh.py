@@ -64,6 +64,14 @@ def max_height(grid, x, y, grid_max_height):
 
     return 1 + grid_max_height[y+1][x]
 
+def print_grid(grid, x, y, width, height):
+    for iy in range(y, y + height + 1):
+        s = ""
+        for ix in range(x, x + width + 1):
+            s += grid[iy][ix]
+
+        print(s)
+
 def k_marsh(grid, x, y, grid_max_width, grid_max_height):
     # At this current location find the maximum width height we can attain
     max_x = -1
@@ -78,11 +86,11 @@ def k_marsh(grid, x, y, grid_max_width, grid_max_height):
 
     for ix in reversed(range(0, grid_cols)):
         for iy in reversed(range(0, grid_rows)):
-            if ix == 13 and iy == 67:
-                a = 10
+            mw = max_width(grid, ix, iy, grid_max_width)
+            mh = min(max_height(grid, ix, iy, grid_max_height), max_height(grid, ix+mw, iy, grid_max_height))
 
-            grid_max_width[iy][ix] = max_width(grid, ix, iy, grid_max_width)
-            grid_max_height[iy][ix] = max_height(grid, ix, iy, grid_max_height)
+            grid_max_width[iy][ix] = mw
+            grid_max_height[iy][ix] = mh
 
             current_perimeter = 0
             if grid_max_width[iy][ix] > 0 and grid_max_height[iy][ix] > 0:
@@ -90,17 +98,18 @@ def k_marsh(grid, x, y, grid_max_width, grid_max_height):
 
             if current_perimeter > perimeter:
                 max_x = ix
+
                 max_y = iy
                 max_w = grid_max_width[iy][ix]
                 max_h = grid_max_height[iy][ix]
 
             perimeter = max(perimeter, current_perimeter)
 
-
     if perimeter == 0:
         perimeter = "impossible"
 
     print("From DP: Max X: %s\tMax Y: %s\tPerimeter: %s\tMax W: %s\tMax H: %s" % (max_x, max_y, perimeter, max_w, max_h))
+    print_grid(grid, ix, iy, max_w, max_h)
 
     return perimeter
 
@@ -148,7 +157,6 @@ def main():
     grid_max_height = [[0] * grid_cols] * grid_rows
 
     max_perimeter = k_marsh(grid, 0, 0, grid_max_width, grid_max_height)
-    fn_max_perimeter(grid)
     print(max_perimeter)
 
 if __name__ == "__main__":
