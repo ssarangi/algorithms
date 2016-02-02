@@ -26,15 +26,16 @@ import sys
 
 def min_units(weights):
     # diffs = [weights[i+1] - weights[i] for i in range(0, len(weights) - 1)]
+    weights = sorted(weights)
 
-    num_units = 0
-    bought = False
-    last_bought = 0
+    num_units = 1
+    last_bought = weights[0]
     for w in weights:
-        if bought == False:
-            bought = True
+        if abs(w - last_bought) > 4:
             last_bought = w
+            num_units += 1
 
+    return num_units
 
 def read(read_fn):
     N = int(read_fn())
