@@ -26,15 +26,14 @@ THE SOFTWARE.
 
 import sys
 
-def find_largest(natural_nums):
-    max_num = natural_nums[0]
-    loc = 0
-    for i in range(1, len(natural_nums)):
-        if max_num < natural_nums[i]:
-            max_num = natural_nums[i]
-            loc = i
+def create_indexes(natural_nums):
+    # Since the numbers are N natural numbers they have to be consecutive. So we know the max element from it.
+    max_v = len(natural_nums)
+    idx_buf = [0] * max_v
+    for i, n in enumerate(natural_nums):
+        idx_buf[max_v - n] = i
 
-    return max_num, loc
+    return idx_buf
 
 def largest_permutation_brute_force(K, natural_nums):
     """
@@ -43,20 +42,41 @@ def largest_permutation_brute_force(K, natural_nums):
     :param natural_nums: the digits which can be swapped
     :return: The largest number
     """
-    for swaps in range(0, K):
-        largest, loc = find_largest(natural_nums)
-        # Swap the 2 numbers
-        natural_nums[0], natural_nums[loc] = natural_nums[loc], natural_nums[0]
+    idx_buf = create_indexes(natural_nums)
 
-    return natural_nums
+    pos = 0
+    swap = 0
+    swap_loc = 0
+    max_val = len(natural_nums)
+    while swap < K and pos < len(natural_nums):
+        if idx_buf[swap_loc] != pos:
+            current_number = natural_nums[pos]
+            to_swap_with = natural_nums[idx_buf[swap_loc]]
+
+            swap_with_idx = idx_buf[swap_loc]
+
+            natural_nums[idx_buf[swap_loc]], natural_nums[pos] = natural_nums[pos], natural_nums[idx_buf[swap_loc]]
+            # Update the index buffer too
+            idx_buf_loc = max_val - current_number
+            idx_buf[idx_buf_loc] = swap_with_idx
+
+            idx_buf[swap_loc] = pos
+
+            swap += 1
+
+        pos += 1
+        swap_loc += 1
+
+    str_nums = []
+    for n in natural_nums:
+        str_nums.append(str(n))
+
+    return str_nums
 
 
 def read(read_fn):
-    first_line = read_fn().split(" ")
-    N = int(first_line[0])
-    K = int(first_line[1])
-
-    natural_nums = [int(num) for num in read_fn().split(" ")]
+    N, K = [int(v) for v in read_fn().replace("\n", "").split(" ")]
+    natural_nums = [int(num) for num in read_fn().strip().replace("\n", "").split(" ")]
 
     return K, natural_nums
 
@@ -67,8 +87,8 @@ def main():
     else:
         K, natural_nums = read(input)
 
-    output = largest_permutation_brute_force(K, natural_nums)
-    print(output)
+    str_nums = largest_permutation_brute_force(K, natural_nums)
+    print(" ".join(str_nums))
 
 if __name__ == "__main__":
     main()
