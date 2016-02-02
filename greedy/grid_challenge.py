@@ -30,24 +30,31 @@ https://www.hackerrank.com/challenges/grid-challenge
 
 import sys
 
+def is_complete(arr):
+    for y in range(0, len(arr)):
+        for x in range(0, len(arr[0]) - 1):
+            if arr[y][x] > arr[y][x+1]:
+                return False
+
+    for x in range(0, len(arr[0])):
+        for y in range(0, len(arr)):
+            if arr[y][x] > arr[y+1][x]:
+                return False
+
+    return True
+
 def lex_sort(arr):
     possible = "NO"
 
-    # figure out the 1st Row and 1st Column
-    row = []
+    # Sort all the rows
+    for i, row in enumerate(arr):
+        arr[i] = sorted(row)
+
+    # Sort all the columns
     col = []
-
-    for c in arr[0]:
-        row.append(c)
-
-    for c in arr:
-        col.append(c[0])
-
-    row = sorted(row)
-    col = sorted(col)
-
-    if row[0] < col[0]:
-        possible = "YES"
+    for i in range(0, len(arr[0])):
+        for j in range(0, len(arr)):
+            col.append(arr[j][i])
 
     return possible
 
