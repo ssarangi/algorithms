@@ -37,7 +37,7 @@ def is_complete(arr):
                 return False
 
     for x in range(0, len(arr[0])):
-        for y in range(0, len(arr)):
+        for y in range(0, len(arr) - 1):
             if arr[y][x] > arr[y+1][x]:
                 return False
 
@@ -50,14 +50,21 @@ def lex_sort(arr):
     for i, row in enumerate(arr):
         arr[i] = sorted(row)
 
-    # Sort all the columns
-    col = []
-    for i in range(0, len(arr[0])):
-        for j in range(0, len(arr)):
-            col.append(arr[j][i])
+    # # Sort all the columns
+    # for i in range(0, len(arr[0])):
+    #     col = []
+    #     for j in range(0, len(arr)):
+    #         col.append(arr[j][i])
+    #
+    #     col = sorted(col)
+    #
+    #     for j in range(0, len(col)):
+    #         arr[j][i] = col[j]
+
+    if is_complete(arr):
+        possible = "YES"
 
     return possible
-
 
 def read(read_fn):
     T = int(read_fn())

@@ -23,35 +23,18 @@ THE SOFTWARE.
 """
 
 """
-The parity of a sequence of bits is 1 if the number of 1's in the sequence is odd;
-otherwise it is 0. Parity checks are used to detect single bit errors in data storage
-and communication.
+Write a function that performs base conversion. Specifically, the input is an
+integer base b1, a string s, representing an integer x in base b1, and another
+integer base b2; the output is the string representing the integer x in base b2.
+Assume 2 <= b1, b2 <= 16. Use 'A' to represent 10, 'B' for 11, ... and 'F' for 15
 """
 
-def calculate_parity(num):
-    num_bits = 0
-    for i in range(0, 64):
-        if num & (1 << i) > 0:
-            num_bits += 1
-
-    if num_bits % 2 == 0:
-        return 1
-
-    return 0
-
-def compute_parity_Ok(num):
-    result = 0
-    while num:
-        result ^= 1
-        print(num)
-        print(num - 1)
-        num &= num - 1
-
-    return result
+def convert_base(int_b1, b1, b2):
+    pass
 
 def main():
-    parity_check = calculate_parity(100100)
-    print(parity_check)
+    int_b2 = convert_base("314", 10, 16)
+    print(int_b2)
 
 if __name__ == "__main__":
     main()
