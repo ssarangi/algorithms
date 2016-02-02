@@ -26,6 +26,8 @@ THE SOFTWARE.
 https://www.hackerrank.com/challenges/grid-challenge
 """
 
+# TODO: NOT_COMPLETE
+
 import sys
 
 def lex_sort(arr):
@@ -41,7 +43,6 @@ def lex_sort(arr):
     for c in arr:
         col.append(c[0])
 
-
     row = sorted(row)
     col = sorted(col)
 
@@ -49,6 +50,7 @@ def lex_sort(arr):
         possible = "YES"
 
     return possible
+
 
 def read(read_fn):
     T = int(read_fn())

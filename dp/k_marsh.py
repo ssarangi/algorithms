@@ -26,30 +26,43 @@ THE SOFTWARE.
 https://www.hackerrank.com/challenges/mr-k-marsh
 """
 
+# TODO: NOT_COMPLETE
+
 import sys
+
 
 def create_2d_arr(width, height):
     arr = [[0 for i in range(0, width)] for j in range(0, height)]
     return arr
 
+
 def max_width(grid, x, y, grid_max_width):
     if grid[y][x] == 'x':
-        return -1
+        return 0
 
     if x == len(grid[0]) - 1:
         return 0
 
-    return 1 + grid_max_width[y][x+1]
+    if grid_max_width[y][x+1] == 'x':
+        return 0
+    else:
+        return 1 + grid_max_width[y][x+1]
 
 
 def max_height(grid, x, y, grid_max_height):
+    if x == 3 and y == 2:
+        a = 10
+
     if grid[y][x] == 'x':
-        return -1
+        return 0
 
     if y == len(grid) - 1:
         return 0
 
-    return 1 + grid_max_height[y+1][x]
+    if grid_max_height[y+1][x] == 'x':
+        return 0
+    else:
+        return 1 + grid_max_height[y+1][x]
 
 
 def print_grid(grid, x, y, width, height):
@@ -61,7 +74,7 @@ def print_grid(grid, x, y, width, height):
         print(s)
 
 
-def k_marsh(grid, x, y, grid_max_width, grid_max_height):
+def k_marsh(grid, grid_max_width, grid_max_height):
     # At this current location find the maximum width height we can attain
     max_x = -1
     max_y = -1
@@ -76,7 +89,23 @@ def k_marsh(grid, x, y, grid_max_width, grid_max_height):
     for ix in reversed(range(0, grid_cols)):
         for iy in reversed(range(0, grid_rows)):
             mw = max_width(grid, ix, iy, grid_max_width)
-            mh = min(max_height(grid, ix, iy, grid_max_height), max_height(grid, ix+mw, iy, grid_max_height))
+            # mh = min(max_height(grid, ix, iy, grid_max_height), max_height(grid, ix + mw, iy, grid_max_height))
+
+            if ix == 4 and iy == 2:
+                b = 10
+
+            if ix == 1 and iy == 0:
+                a = 10
+
+            mh = max_height(grid, ix + mw, iy, grid_max_height)
+            cp = 2 * (mh + mw)
+
+            for i in reversed(range(1, mw)):
+                tmp = max_height(grid, ix + i, iy, grid_max_height)
+                cp1 = 2 * i * tmp
+                if cp1 > cp:
+                    mh = min(mh, max_height(grid, ix + i, iy, grid_max_height))
+                    mw = i
 
             grid_max_width[iy][ix] = mw
             grid_max_height[iy][ix] = mh
@@ -97,8 +126,8 @@ def k_marsh(grid, x, y, grid_max_width, grid_max_height):
     if perimeter == 0:
         perimeter = "impossible"
 
-    # print("From DP: Max X: %s\tMax Y: %s\tPerimeter: %s\tMax W: %s\tMax H: %s" % (max_x, max_y, perimeter, max_w, max_h))
-    # print_grid(grid, ix, iy, max_w, max_h)
+    print("From DP: Max X: %s\tMax Y: %s\tPerimeter: %s\tMax W: %s\tMax H: %s" % (max_x + 1, max_y + 1, perimeter, max_w, max_h))
+    print_grid(grid, max_x, max_y, max_w, max_h)
 
     return perimeter
 
@@ -125,7 +154,7 @@ def main():
     grid_max_width = create_2d_arr(grid_cols, grid_rows)
     grid_max_height = create_2d_arr(grid_cols, grid_rows)
 
-    max_perimeter = k_marsh(grid, 0, 0, grid_max_width, grid_max_height)
+    max_perimeter = k_marsh(grid, grid_max_width, grid_max_height)
     print(max_perimeter)
 
 if __name__ == "__main__":

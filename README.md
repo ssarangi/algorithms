@@ -1,3 +1,5 @@
+Look for TODO: NOT_COMPLETE for problems which haven't been completed
+
 HackerRank solutions for my problems.
 
 Algorithm Complexity: you need to know Big-O. It's a must. If you struggle with basic big-O complexity analysis,
