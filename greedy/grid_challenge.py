@@ -29,7 +29,26 @@ https://www.hackerrank.com/challenges/grid-challenge
 import sys
 
 def lex_sort(arr):
-    pass
+    possible = "NO"
+
+    # figure out the 1st Row and 1st Column
+    row = []
+    col = []
+
+    for c in arr[0]:
+        row.append(c)
+
+    for c in arr:
+        col.append(c[0])
+
+
+    row = sorted(row)
+    col = sorted(col)
+
+    if row[0] < col[0]:
+        possible = "YES"
+
+    return possible
 
 def read(read_fn):
     T = int(read_fn())
@@ -38,7 +57,7 @@ def read(read_fn):
         N = int(read_fn())
         arr = []
         for j in range(0, N):
-            string = read_fn().split(" ")
+            string = read_fn().replace('\n', '')
             arr.append(string)
 
         alltestcases.append(arr)
@@ -54,7 +73,8 @@ def main():
         alltestcases = read(input)
 
     for testcase in alltestcases:
-        lex_sort(testcase)
+        res = lex_sort(testcase)
+        print(res)
 
 if __name__ == "__main__":
     main()
