@@ -25,7 +25,16 @@ THE SOFTWARE.
 import sys
 
 def min_units(weights):
-    pass
+    # diffs = [weights[i+1] - weights[i] for i in range(0, len(weights) - 1)]
+
+    num_units = 0
+    bought = False
+    last_bought = 0
+    for w in weights:
+        if bought == False:
+            bought = True
+            last_bought = w
+
 
 def read(read_fn):
     N = int(read_fn())
@@ -39,8 +48,8 @@ def main():
     else:
         weights = read(input)
 
-    exists = min_units(weights)
-    print(exists)
+    num_units = min_units(weights)
+    print(num_units)
 
 if __name__ == "__main__":
     main()
