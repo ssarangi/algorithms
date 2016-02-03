@@ -103,7 +103,7 @@ def compute_fast_permutations(M, N):
 def compute_num_strings(N, M):
     # Figure out the number of strings we can create McN
     # combinations = compute_combinations(M)
-    permutations = compute_permutations(M, N)
+    permutations = compute_fast_permutations(M, N)
     total_non_palindrome = permutations
 
     return total_non_palindrome
