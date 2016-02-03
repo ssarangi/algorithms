@@ -29,7 +29,19 @@ https://www.hackerrank.com/challenges/flowers
 import sys
 
 def min_cost(K, costs):
-    pass
+    flowers = [0] * K
+    costs = sorted(costs, reverse=True)
+    total_cost = 0
+
+    current_buyer = 0
+    for i, cost in enumerate(costs):
+        total_cost += cost * (flowers[current_buyer] + 1)
+        flowers[current_buyer] += 1
+        current_buyer += 1
+        if current_buyer == K:
+            current_buyer = 0
+
+    return total_cost
 
 def read(read_fn):
     N, K = [int(v) for v in read_fn().replace("\n", "").split(" ")]
