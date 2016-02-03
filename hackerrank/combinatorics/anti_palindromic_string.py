@@ -71,11 +71,42 @@ def get_chars(M):
         res.append(c)
     return res
 
-def compute_num_strings(N, M):
+def compute_num_strings_old(N, M):
     chars = get_chars(M)
     permutations = get_permutations(N, chars)
     non_palindrome = len(permutations)
     return non_palindrome
+
+def factorial(N):
+    fact = 1
+    while N > 1:
+        fact *= N
+        N -= 1
+
+    return fact
+
+def compute_combinations(M, N):
+    combinations = factorial(M) / (factorial(N) * factorial(M-N))
+    return combinations
+
+def compute_permutations(M, N):
+    permutations = factorial(M) // factorial(M - N)
+    return permutations
+
+def compute_fast_permutations(M, N):
+    fact = 1
+    for i in range(M, M - N, -1):
+        fact *= i
+
+    return fact
+
+def compute_num_strings(N, M):
+    # Figure out the number of strings we can create McN
+    # combinations = compute_combinations(M)
+    permutations = compute_permutations(M, N)
+    total_non_palindrome = permutations
+
+    return total_non_palindrome
 
 def read(read_fn):
     T = int(read_fn().replace("\n", ""))
