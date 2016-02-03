@@ -70,6 +70,75 @@ def zip_list(head):
         # Change the start node
         start_node = curr_next_node
 
+
+def find_length(head):
+    length = 0
+    node = head
+    while node is not None:
+        node = node.next
+        length += 1
+
+    return length
+
+def find_mid_pt(head):
+    length = find_length(head)
+    assert length % 2 == 0
+    mid_pt = length // 2
+
+    current = 0
+    mid_pt_node = None
+    mid_pt_minus_one_node = None
+    node = head
+
+    while node.next is not None:
+        if current == mid_pt:
+            mid_pt_node = node
+
+        if current == mid_pt - 1:
+            mid_pt_minus_one_node = node
+
+        current += 1
+        node = node.next
+
+    return mid_pt_node, mid_pt_minus_one_node, node
+
+def reverse_linked_list(head):
+    node = head
+    node_next = node.next
+    last_node = None
+
+    while node is not None:
+        last_node = node
+
+        if node_next is not None:
+            node_next_next = node_next.next
+            node_next.next = node
+
+        node = node_next
+
+        if node_next is not None:
+            node_next = node_next_next
+
+    head.next = None
+    return last_node
+
+def zip_list_linear_time(head):
+    mid_pt, mid_pt_minus_one, last_node = find_mid_pt(head)
+
+    mid_pt_minus_one.next = None
+    end_head = reverse_linked_list(mid_pt)
+
+    node = head
+    end_pt = end_head
+
+    while end_pt is not None:
+        node_next = node.next
+        end_pt_next = end_pt.next
+        node.next = end_pt
+        node.next.next = node_next
+        node = node_next
+        end_pt = end_pt_next
+
 def print_linked_list(head):
     node = head
     while node is not None:
@@ -78,7 +147,8 @@ def print_linked_list(head):
 
 def main():
     head = create_linked_list_from_list([1,2,3,4,5,6])
-    zip_list(head)
+    # zip_list(head)
+    zip_list_linear_time(head)
     print_linked_list(head)
 
 if __name__ == "__main__":
