@@ -26,8 +26,57 @@ THE SOFTWARE.
 https://www.hackerrank.com/challenges/unbounded-knapsack
 """
 
-def knapsack():
-    pass
+def all_multiples(el, k):
+    arr = []
+    counter = 1
+    while True:
+        res = el * counter
+        if res <= k:
+            arr.append(res)
+        else:
+            break
+
+        counter += 1
+
+    return arr
+
+def knapsack(k, els):
+    # Create all possible ways in which we can select the same element multiple times
+    prevarr = []
+    max_sum = 0
+    for el in els:
+        if el > k:
+            continue
+        elif el == k:
+            return k
+
+        multiples_arr = all_multiples(el, k)
+
+        max_multiples = 0
+        if len(multiples_arr) > 0:
+            max_multiples = multiples_arr[-1]
+
+        max_sum = max(max_sum, max_multiples)
+        # Find the last element and check if we already found the sum
+        if max_multiples == k:
+            return k
+
+        newarr = [el for el in prevarr] + [el for el in multiples_arr]
+        if len(prevarr) > 0:
+            for multiple in multiples_arr:
+                for p in prevarr:
+                    sum = p + multiple
+
+                    if max_sum == k:
+                        return k
+
+                    if p + multiple <= k:
+                        newarr.append(p + multiple)
+                        max_sum = max(sum, max_sum)
+
+        prevarr = newarr
+
+    return max_sum
 
 import sys
 
@@ -35,11 +84,8 @@ def read(read_fn):
     test_cases = []
     T = int(read_fn())
     for i in range(0, T):
-        line = read_fn().split(" ")
-        N = int(line[0])
-        k = int(line[1])
-        a = read_fn()
-        els = [int(price) for price in a.split(" ")]
+        N, k = [int(v) for v in read_fn().replace("\n", "").split(" ")]
+        els = [int(price) for price in read_fn().replace("\n", "").split(" ")]
         test_cases.append((k, els))
 
     return test_cases
@@ -51,9 +97,9 @@ def main():
     else:
         test_cases = read(input)
 
-    for prices in test_cases:
-        profit, transactions = knapsack()
-        print(profit)
+    for k, els in test_cases:
+        max_sum = knapsack(k, els)
+        print(max_sum)
 
 if __name__ == "__main__":
     main()
