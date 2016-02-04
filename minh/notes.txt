@@ -1,0 +1,324 @@
+MInh: you will need to work on the coding too
+MInh: that's another problem
+MInh: that'd be later
+MInh: now, just focus on the algorithm part
+MInh: most of the time, if you get the algorithm correct, the coding will be very clean
+MInh: so, let's get back to the max sum problem
+Satyajit: ok so this one can be done with 1 array right
+Satyajit: ?
+MInh: actually, this one can be done with O(1) memory
+MInh: even from your code
+MInh: you just need to access the previous element
+Satyajit: yeah thats true
+MInh: so there's no need to allocate an array
+Satyajit: right
+MInh: but let's just forget about it for now
+MInh: I think the code is not correct
+Satyajit: ok..
+MInh: but I'm just too lazy to get another counter example
+Satyajit: :)
+MInh: let's step back and analyze the approach
+Satyajit: let me think of one
+Satyajit: ok
+MInh: by going back to the max sum problem
+MInh: how do you do it?
+Satyajit: so max sum we basically
+MInh: yes
+Satyajit: keep track of where our sum < 0
+Satyajit: so then we just update the start position
+Satyajit: and keep on checking
+Satyajit: but that is assuming we are looking for the max positive sum
+Satyajit: let me take another stab at this problem
+MInh: we are looking for the max sum
+MInh: so if the array is negative
+MInh: you return the max negative number
+Satyajit: right
+MInh: I think your code may be correct for integer numbers
+MInh: after thinking about it carefully :)
+Satyajit: :)
+Satyajit: i can clean it up to use only 2 variables
+MInh: not needed
+MInh: normally, you should come up with a solution using an array first
+MInh: it's actually easier to code
+MInh: and then, you can point out your observation
+Satyajit: right right
+MInh: that would show that you're good
+MInh: if you say you can use O(1) right away
+MInh: it's OK
+Satyajit: :)
+MInh: but if you are not careful, you may get into trouble
+MInh: by messing up the variables
+Satyajit: right
+MInh: for me when interviewing people
+MInh: if you can get the code right with array
+MInh: that's good
+MInh: I'll ask you a follow up question
+MInh: like can you improve the space usage
+MInh: or something like that
+Satyajit: oh right.. then it clicks
+MInh: are you thinking about the max sum?
+Satyajit: no i was actually thinking about the real number part
+Satyajit: of the problem
+MInh: forget about it for now
+Satyajit: ok...
+MInh: let's get back to the max sum problem
+Satyajit: let me think about the max sum
+Satyajit: ok
+MInh: tell me how you do it
+Satyajit: so in max sum you start from pos 0
+Satyajit: and keep on accumulating until you hit a negative number
+Satyajit: at that point you keep the sum somewhere and reset the sum to 0
+MInh: OK
+MInh: not really
+Satyajit: actually its a longest common subsequence
+MInh: you only reset the sum to 0 when the new sum is negative
+Satyajit: which i am saying
+Satyajit: but then
+Satyajit: if you reset 0
+Satyajit: when the new sum is negative
+MInh: OK
+Satyajit: you could have a case where the left + negative + right
+MInh: that's the idea
+Satyajit: is > left
+Satyajit: and > right
+Satyajit: right.. so if you reset to 0 when you see negative
+Satyajit: you are not getting the max sum
+Satyajit: right
+Satyajit: like
+Satyajit: for example
+Satyajit: [10, 20, -10, 30, 40]
+Satyajit: so then the max sum is the entire array
+MInh: right
+Satyajit: not the left or right of the neg number
+MInh: OK, can you explain it in DP way?
+MInh: what you just said is DP
+Satyajit: so this problem seems similar to me as this one
+Satyajit: right
+MInh: but it's not really clear
+MInh: what you're reusing here
+MInh: so the idea is actually very simple
+Satyajit: we are reusing the sum till the prev element
+Satyajit: of the array
+Satyajit: at 0 - sum = 10
+Satyajit: at 1 - sum = 30
+Satyajit: at 2 - so here we could reset to 0
+Satyajit: or we could add the -10 to 30
+Satyajit: right
+Satyajit: ?
+MInh: since -10 + 30 > 0
+MInh: you should not reset to 0
+Satyajit: but that's for thi case
+MInh: let me explain to you why we should not reset the sum to 0
+Satyajit: ok
+MInh: in the general case
+MInh: so you're at i
+Satyajit: yep
+MInh: and the sum so far is S
+MInh: let's say that S + A[i] > 0
+MInh: and A[i] < 0
+MInh: S' = S + A[i] > 0
+MInh: so if you were to reset S' = 0
+MInh: then you may miss the next larger sum
+MInh: for example, what if A[i+1] > 0
+Satyajit: right
+Satyajit: ok can i ask a question
+MInh: sure
+Satyajit: not on the max sum but on the product one
+Satyajit: the main difference between that
+Satyajit: i mean the max sum and max prod
+Satyajit: is that
+Satyajit: S' = S + A[i] > 0 even when A[i] < 0 (possibly)
+Satyajit: but in the product case
+Satyajit: S' = S * A[i] < 0 if A[i] < 0 always
+Satyajit: right
+Satyajit: so that's a major difference in the logic right there
+Satyajit: isn't it
+Satyajit: on how you reset
+MInh: right
+MInh: OK, before I explain to you how to deal with the max product problem
+MInh: let me continue on the max sum
+Satyajit: sorry :)
+Satyajit: continue
+MInh: Let S be a new array
+MInh: where S[i] is the max sum of a sub array ending at i in A
+MInh: here is an example
+MInh: A = [3 2 -1 4 5]
+MInh: S = [3 5 4 9 14]
+MInh: So how do you calculate S[i]?
+MInh: S[0] = A[0]
+MInh: i > 0:
+Satyajit: right
+Satyajit: and then you continue till you hit a sum < 0
+Satyajit: at that point you reset
+MInh: Here's the DP recurrence
+MInh: if A[i] >= 0: S[i] = S[i-1] + A[i]
+MInh: if A[i] < 0:
+MInh: if S[i-1] + A[i] < 0: S[i] = 0
+MInh: otherwise S[i] = S[i-1] + A[i]
+Satyajit: yep
+MInh: in another word
+MInh: S[i] = S[i-1] + A[i] if S[i-1] + A[i] >= 0
+MInh: and 0 otherwise
+Satyajit: right
+MInh: actually, this is not correct
+MInh: because we define S[i] to be the max sum ending at i
+MInh: i.e. it must include A[i]
+MInh: so, let's just redefine it
+Satyajit: ok...
+MInh: S[0] = A[0]
+MInh: S[i] = max(A[i], S[i-1] + A[i])
+MInh: so this captures all the cases:
+MInh: if S[i-1] < 0:
+MInh: S[i-1] + A[i] < A[i]
+Satyajit: right
+MInh: so max(A[i], S[i-1]) = A[i]
+MInh: if S[i-1] >= 0
+MInh: if A[i] >= 0, max(A[i], S[i-1] + A[i]) = S[i-1] + A[i]
+MInh: if A[i-1] < 0
+MInh: sorry
+MInh: A[i] < 0
+Satyajit: right
+Satyajit: makes sense
+MInh: A[i] <= A[i] + S[i-1]
+MInh: so max(A[i], A[i] + s[i-1]) = A[i] + S[i-1]
+MInh: let's rewrite it:
+Satyajit: ok
+MInh: S[i] = max(A[i], A[i] + S[i-1])
+MInh: you actually don't need to reset the sum to 0 here at all
+Satyajit: i see... so at every point
+Satyajit: we just keep the max
+MInh: as you know, the max sum must end at some index i
+MInh: so after you've built array S
+MInh: you can ge back and find the max
+MInh: that's the silly way of course
+Satyajit: well we can keep track
+Satyajit: of the max along the way
+MInh: yes
+Satyajit: at every S[i]
+Satyajit: right
+MInh: and of course, you only need the previous S[i-1]
+Satyajit: right
+MInh: so you don't really need an array
+Satyajit: right
+MInh: so the algorithm can be simplified further
+MInh: S = A[0]
+MInh: i = 1..n:
+MInh: newS = max(A[i], S + A[i])
+MInh: maxS = max(newS, S)
+MInh: sorry
+MInh: maxS = max(newS, maxS)
+MInh: what the heck
+Satyajit: :D
+Satyajit: well i got what you are saying
+MInh: S = max(A[i], S + A[i])
+MInh: maxS = max(S, maxS)
+MInh: that simple
+Satyajit: nice
+MInh: that's DP
+MInh: so the key idea here is to define array S
+Satyajit: right
+MInh: S[i] is the max sum ending at i including A[i]
+Satyajit: ya
+MInh: now, let's get back to the max product
+MInh: remeber that S[i] can be negative
+MInh: but it doesn't really matter
+MInh: can we use a similar approach for the max product problem?
+Satyajit: let me think
+Satyajit: one sec
+Satyajit: well
+Satyajit: won't work directly
+Satyajit: since if A[i] < 0
+Satyajit: then S = max(S, A[i] * S)
+MInh: I said similar
+Satyajit: will be always S if S > 0
+MInh: right
+MInh: but if you could somehow store the min negative product so far
+MInh: then you can get a new postive max right?
+Satyajit: yep
+Satyajit: so that's essentially what i did ?
+Satyajit: isn't it.. except we store it in variables
+MInh: let's say that P1[i] is the max positive product at i (including A[i])
+Satyajit: right
+MInh: and P2[i] is the min negative product at i (including A[i])
+MInh: now, at i
+MInh: if A[i] >= 0: P1[i] = max(A[i], P1[i-1]*A[i])
+MInh: if A[i] < 0: P1[i] = A[i]*P2[i-1]
+MInh: right?
+MInh: do you folow me?
+Satyajit: yeah
+MInh: how about P2[i]?
+MInh: I just left out the recurrence for P2[i]
+Satyajit: P2[i] will be updated nonetheless
+Satyajit: right
+MInh: show me the recurrence for P2[i]
+MInh: you always need to update P1[i] and P2[i]
+MInh: because they are needed for the next step
+MInh: i+1
+MInh: and so on
+Satyajit: if A[i] > 0: P[i] = A[i] * P[i-1]
+Satyajit: if A[i] < 0: P[i] = P[i-1]
+Satyajit: since if A[i] > 0, then P[i-1] is the min neg
+Satyajit: sol it will give us the new min
+Satyajit: however if A[i] < 0 then, we have to use the previous sum since that will be the min neg
+MInh: remember, the term must include A[i]
+MInh: so if A[i] >= 0: P2[i] = P2[i-1]*A[i]
+Satyajit: ok... if A[i] < 0: P2[i] = max(A[i], P[i-1])
+Satyajit: sorry
+Satyajit: min(
+Satyajit: min(A[i], P[i-1])
+MInh: min(A[i], A[i]*P1[i-1])
+MInh: actually
+Satyajit: why A[i] * P[i-1].. this will always give a +ve integer
+Satyajit: ohh
+MInh: no
+Satyajit: you said
+Satyajit: P1
+MInh: P1 is the max positive
+Satyajit: yeah why not use P2's prev
+MInh: because P2 is always negative
+MInh: remember the definitions of P1 and P2?
+MInh: P1 is the max positive
+Satyajit: yeah P2 is the min negative
+Satyajit: and P1 is max positive
+MInh: P2 is the min negative
+MInh: so when A[i] < 0:
+MInh: P2[i] = min(A[i], A[i]*P1[i-1])
+MInh: and that's the DP recurrence of the problem
+Satyajit: so one question here is
+Satyajit: P2[i] has no recurrence
+Satyajit: with its previous elements
+MInh: it does right?
+MInh: it uses P1
+Satyajit: no it uses P1 but no elements from P2's prev elements
+MInh: let me rewrite the recurrence in the code
+Satyajit: ok
+MInh: so, it's much easier to code now
+Satyajit: right right
+MInh: and of course, you can remove the array
+MInh: and you just need 2 variables
+Satyajit: right
+Satyajit: :)
+Satyajit: that was pretty good
+MInh: what I'm saying here is, go back to the basic
+MInh: most people have the wrong thinking about the max sum problem
+Satyajit: right
+MInh: so most guys I asked about the max sum problem
+Satyajit: i see what you are saying
+MInh: they will give me the correct solution
+
+
+
+if A[0] < 0:
+  P1[0] = 0
+  P2[0] = A[0]
+else:
+  P1[0] = A[0]
+  P2[0] = 0
+
+# i > 0:
+if A[i] < 0:
+  P1[i] = A[i] * P2[i-1]
+  P2[i] = min(A[i], A[i] * P1[i-1])
+else:
+  P1[i] = max(A[i], A[i] * P1[i-1])
+  P2[i] = A[i] * P2[i-1]

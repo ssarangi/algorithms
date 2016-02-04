@@ -30,9 +30,8 @@ find the sub array with the max product
 
 import sys
 
-def max_product(arr):
+def max_product_unclean(arr):
     all_zeros = True
-    all_negative = True
     max_pos_prod = [1] * len(arr)
     max_cum_prod = [1] * len(arr)
 
@@ -47,9 +46,6 @@ def max_product(arr):
     for i, el in enumerate(arr):
         if el != 0:
             all_zeros = False
-
-        if el > 0:
-            all_negative = False
 
         if i == 0:
             continue
@@ -71,10 +67,11 @@ def max_product(arr):
 
     if all_zeros:
         maxv = 0
-    elif all_negative:
-        maxv = max_cum_prod[-1]
 
     return maxv
+
+def max_product(arr):
+    pass
 
 def main():
     testcase1 = [1, 2, 3, -4]
@@ -83,13 +80,15 @@ def main():
     testcase4 = [0,0,0,0,0,0]
     testcase5 = [-1,-1,-1,-1,-1]
     testcase6 = [-1,-1,-1,-1,-1,4]
+    testcase_minh = [0, -3, 1 , -4, 1, 2, 3]
+    testcase7 = [-3, -2, -5]
 
-    print(max_product(testcase6))
+    print(max_product(testcase7))
     assert max_product(testcase1) == 6
     assert max_product(testcase2) == 360
     assert max_product(testcase3) == 72
     assert max_product(testcase4) == 0
-    assert max_product(testcase5) == -1
+    assert max_product(testcase5) == 1
     assert max_product(testcase6) == 4
 
 if __name__ == "__main__":
