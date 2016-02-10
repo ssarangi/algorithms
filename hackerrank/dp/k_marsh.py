@@ -43,23 +43,20 @@ def max_width(grid, x, y, grid_max_width):
     if x == len(grid[0]) - 1:
         return 0
 
-    if grid_max_width[y][x+1] == 'x':
+    if grid[y][x+1] == 'x':
         return 0
     else:
         return 1 + grid_max_width[y][x+1]
 
 
 def max_height(grid, x, y, grid_max_height):
-    if x == 3 and y == 2:
-        a = 10
-
     if grid[y][x] == 'x':
         return 0
 
     if y == len(grid) - 1:
         return 0
 
-    if grid_max_height[y+1][x] == 'x':
+    if grid[y+1][x] == 'x':
         return 0
     else:
         return 1 + grid_max_height[y+1][x]
@@ -81,61 +78,76 @@ def k_marsh(grid, grid_max_width, grid_max_height):
     max_w = -1
     max_h = -1
 
-    perimeter = 0
+    max_perimeter = 0
 
     grid_rows = len(grid)
     grid_cols = len(grid[0])
+    grid_max_perimeter = create_2d_arr(grid_cols, grid_rows)
 
     for ix in reversed(range(0, grid_cols)):
         for iy in reversed(range(0, grid_rows)):
-            mw = max_width(grid, ix, iy, grid_max_width)
-            # mh = min(max_height(grid, ix, iy, grid_max_height), max_height(grid, ix + mw, iy, grid_max_height))
-
-            if ix == 4 and iy == 2:
-                b = 10
-
             if ix == 1 and iy == 0:
                 a = 10
 
-            mh = max_height(grid, ix + mw, iy, grid_max_height)
-            cp = 2 * (mh + mw)
-
-            for i in reversed(range(1, mw)):
-                tmp = max_height(grid, ix + i, iy, grid_max_height)
-                cp1 = 2 * i * tmp
-                if cp1 > cp:
-                    mh = min(mh, max_height(grid, ix + i, iy, grid_max_height))
-                    mw = i
+            # Figure out the max width and height at this point
+            mw = max_width(grid, ix, iy, grid_max_width)
+            mh = max_height(grid, ix, iy, grid_max_height)
 
             grid_max_width[iy][ix] = mw
             grid_max_height[iy][ix] = mh
 
-            current_perimeter = 0
-            if grid_max_width[iy][ix] > 0 and grid_max_height[iy][ix] > 0:
-                current_perimeter = grid_max_width[iy][ix] * 2 + grid_max_height[iy][ix] * 2
+            if mh == 0 or mw == 0:
+                continue
 
-            if current_perimeter > perimeter:
-                max_x = ix
+            # Now try to find the biggest rectangular area with this information.
+            current_max_w = 0
+            current_max_h = 0
+            cmw = mw
+            cmh = mh
+            for i in reversed(range(1, cmw + 1)):
+                mh = cmh
+                for j in reversed(range(1, cmh + 1)):
+                    tmp_height = max_height(grid, ix + i, iy, grid_max_height)
+                    current_max_h = max(current_max_h, tmp_height)
 
-                max_y = iy
-                max_w = grid_max_width[iy][ix]
-                max_h = grid_max_height[iy][ix]
+                    # At this height figure out the max width and make sure that it is equal to the current width
+                    tmp_width = max_width(grid, ix, iy + j, grid_max_width)
+                    current_max_w = max(current_max_w, tmp_width)
 
-            perimeter = max(perimeter, current_perimeter)
+                    # Make sure all the width and heights are greater than 0.
+                    # Verify the height we get from the other side is the same as
+                    # this side. (mh == tmp)
+                    # if tmp_width > 0 and tmp_height > 0 and tmp_height >= (mh - (grid_rows - (iy + j))) and tmp_width >= (mw - (grid_cols - (ix + i))):
+                    if tmp_width > 0 and tmp_width > 0 and tmp_width >= mw and tmp_height >= mh:
+                        cp = 2 * (i + j)
+                        if cp > max_perimeter:
+                            max_perimeter = cp
+                            max_w = i
+                            max_h = j
+                            max_x = ix
+                            max_y = iy
 
-    if perimeter == 0:
-        perimeter = "impossible"
+                    mh -= 1
+                    # Find the largest perimeter contained within (ix, iy) and (ix + mw, ix + mh)
 
-    print("From DP: Max X: %s\tMax Y: %s\tPerimeter: %s\tMax W: %s\tMax H: %s" % (max_x + 1, max_y + 1, perimeter, max_w, max_h))
-    print_grid(grid, max_x, max_y, max_w, max_h)
+                mw -= 1
 
-    return perimeter
+                grid_max_perimeter[iy][ix] = max_perimeter
+
+    if max_perimeter == 0:
+        max_perimeter = "impossible"
+
+    # print("From DP: Max X: %s\tMax Y: %s\tPerimeter: %s\tMax W: %s\tMax H: %s" % (max_x, max_y, max_perimeter, max_w, max_h))
+    # print_grid(grid, max_x, max_y, max_w, max_h)
+
+    return max_perimeter
 
 def read(read_fn):
     m, n = [int(v) for v in read_fn().split(" ")]
     grid = []
     for i in range(0, m):
         row = read_fn().replace("\n", "")
+        row = [i for i in row]
         grid.append(row)
 
     return grid
