@@ -23,9 +23,36 @@ def edit_distance_recursive(s1, s2):
 
     return max_distance
 
+
+# Transform s1 into s2
 def edit_distance_dp(s1, s2):
-    dp_arr = [[0 for i in range(0, len(s1) + 1)] for j in range(0, len(s2) + 1)]
-    pass
+    m = len(s1)
+    n = len(s2)
+    dp = [[0 for i in range(0, n + 1)] for j in range(0, m + 1)]
+
+    for i in range(m+1):
+        for j in range(n+1):
+            c1 = s1[i-1]
+            c2 = s2[j-1]
+
+            # If s1 is empty, then we have to insert all characters of s2 into s1
+            if i == 0:
+                dp[i][j] = j
+            # If s2 is empty, then we have to remove all the characters of s1
+            elif j == 0:
+                dp[i][j] = i
+
+            # If the current characters matched, then the cost is the same
+            elif (c1 == c2):
+                dp[i][j] = dp[i-1][j-1]
+            else:
+                # Now consider the cost of insertion, removal
+                dp[i][j] = 1 + min(dp[i][j-1], # Insert
+                                   dp[i-1][j], # Delete
+                                   dp[i-1][j-1]) # Replace
+
+    return dp[m][n]
+
 
 def main():
     t1 = ["geek", "gesek"]
