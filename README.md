@@ -1,3 +1,6 @@
+# TODO
+## geeksforgeeks/bst/count_inversions - Complete with AVL trees
+
 Look for TODO: NOT_COMPLETE for problems which haven't been completed
 
 HackerRank solutions for my problems.
