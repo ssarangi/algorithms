@@ -17,13 +17,48 @@ a 5 × 60 matrix. Then,
 
 """
 
-# TODO: Incomplete
+# A     B      C       D
+#    a     b       c
+#       d      e
+#          f
+
+import sys
 
 def matrix_chain_multiplication(p):
-    pass
+    num_matrices = len(p)
+    dp = p
+
+    # Augment the dp array
+    # So the augmented value is 0
+    dp = [0 for i in range(0, num_matrices)]
+
+    # Now start creating the triangle
+    for j in range(0, len(dp) - 1):
+        new_dp = [0] * (len(dp) - 1)
+
+        min_v = sys.maxsize
+        min_idx = -1
+        for i in range(0, num_matrices - 1):
+            num_operations = p[i][0] * p[i][1] * p[i+1][1]
+            fin_res = num_operations + min(dp[i], dp[i+1])
+            new_dp[i] = fin_res
+
+            if min_v > fin_res:
+                min_v = fin_res
+                min_idx = i
+
+        p[min_idx][1] = p[min_idx+1][1]
+        p.remove(p[min_idx+1])
+
+        dp = new_dp
+        num_matrices = num_matrices - 1
+
+    assert len(dp) == 1
+    return dp[0]
 
 def main():
-    p = [(40, 20),(20, 30), (30, 10), (10, 30)]
+    p = [[40, 20],[20, 30], [30, 10], [10, 30]]
+    print(matrix_chain_multiplication(p))
 
 if __name__ == "__main__":
     main()
