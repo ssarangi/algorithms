@@ -26,7 +26,6 @@ import sys
 
 def matrix_chain_multiplication(p):
     num_matrices = len(p)
-    dp = p
 
     # Augment the dp array
     # So the augmented value is 0
