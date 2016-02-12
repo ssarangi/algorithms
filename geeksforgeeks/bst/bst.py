@@ -66,6 +66,18 @@ class Node:
     def __str__(self):
         return str(self.__data)
 
+    def add(self, v):
+        if v < self.__data:
+            if self.__left is None:
+                self.__left = Node(v, self)
+            else:
+                self.__left.add(v)
+        elif v > self.__data:
+            if self.__right is None:
+                self.__right = Node(v, self)
+            else:
+                self.__right.add(v)
+
 
 class BinaryTree:
     def __init__(self):
@@ -282,3 +294,51 @@ class BinaryTree:
             cn = cn.right
 
         return max_v
+
+
+
+# Create an artificial dataset for the test case
+
+#                              +-------+
+#                              |   3   |
+#                              |       |
+#                              +-------+
+#                              |       |
+#                              |       |
+#                +-------+-----+       +-----+-------+
+#                |   2   |                   |   5   |
+#                |       |                   |       |
+#                +-------+                   +-------+
+#                |       |
+#                |       |
+# +-------+------+       +-------+--------+
+# |   1   |                      |   4    |
+# |       |                      |        |
+# +-------+                      +--------+
+
+def create_artificial_tree():
+    root = Node(3)
+    left = Node(2, root)
+    right = Node(5, root)
+
+    left_left = Node(1, left)
+    left_right = Node(4, left)
+
+    root.left = left
+    root.right = right
+
+    left.left = left_left
+    left.right = left_right
+
+    return root
+
+
+def create_tree(*args):
+    root = Node(args[0])
+
+    cn = root
+    for i in range(1, len(args)):
+        v = args[i]
+        cn.add(v)
+
+    return root

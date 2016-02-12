@@ -23,42 +23,7 @@ THE SOFTWARE.
 """
 
 # LINK: http://www.geeksforgeeks.org/a-program-to-check-if-a-binary-tree-is-bst-or-not/
-from geeksforgeeks.bst.bst import Node
-
-# Create an artificial dataset for the test case
-
-#                              +-------+
-#                              |   3   |
-#                              |       |
-#                              +-------+
-#                              |       |
-#                              |       |
-#                +-------+-----+       +-----+-------+
-#                |   2   |                   |   5   |
-#                |       |                   |       |
-#                +-------+                   +-------+
-#                |       |
-#                |       |
-# +-------+------+       +-------+--------+
-# |   1   |                      |   4    |
-# |       |                      |        |
-# +-------+                      +--------+
-
-def create_artificial_tree():
-    root = Node(3)
-    left = Node(2, root)
-    right = Node(5, root)
-
-    left_left = Node(1, left)
-    left_right = Node(4, left)
-
-    root.left = left
-    root.right = right
-
-    left.left = left_left
-    left.right = left_right
-
-    return root
+from geeksforgeeks.bst.bst import Node, create_artificial_tree
 
 def check_if_bst(node, ancestor_val=None):
     """
