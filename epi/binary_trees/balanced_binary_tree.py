@@ -39,7 +39,7 @@ class BinaryTree:
 
         max_h = max(height_l, height_r)
         height += max_h
-        return max_h
+        return height
 
     def is_balanced(self):
         height_left = 0
@@ -49,7 +49,7 @@ class BinaryTree:
             height_left = self.get_height(self.root.left, 1)
 
         if self.root.right is not None:
-            height_right = self.get_height(self.root.height, 1)
+            height_right = self.get_height(self.root.right, 1)
 
         if abs(height_right - height_left) > 1:
             return False
