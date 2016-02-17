@@ -2,6 +2,7 @@ class Node:
     def __init__(self, data=None):
         self.left = None
         self.right = None
+        self.parent = None
         self.data = data
 
     def __str__(self):
@@ -10,6 +11,19 @@ class Node:
 class BinaryTree:
     def __init__(self):
         self.root = None
+
+    def find(self, v):
+        cn = self.root
+
+        while cn is not None:
+            if v < cn.data:
+                cn = cn.left
+            elif v > cn.data:
+                cn = cn.right
+            else:
+                return cn
+
+        return None
 
     def add(self, v):
         cn = self.root
@@ -22,6 +36,7 @@ class BinaryTree:
                 cn = cn.right
 
         cn = Node(v)
+        cn.parent = prev
         if prev.data > v:
             prev.left = cn
         else:
@@ -66,6 +81,7 @@ def create_tree():
         bin_tree.add(elm)
 
     print(bin_tree.is_balanced())
+    return bin_tree
 
 def main():
     create_tree()
