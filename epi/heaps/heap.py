@@ -51,20 +51,23 @@ class Heap:
         left_child = Heap.get_left_child(0)
         right_child = Heap.get_right_child(0)
 
-        while left_child < len(self._adt) - 1 and right_child < len(self._adt) - 1:
-
-            if self._comparator(self._adt[left_child], self._adt[top_el_idx]) or self._comparator(self._adt[right_child], self._adt[top_el_idx]):
+        while left_child < len(self._adt) or right_child < len(self._adt):
+            if left_child <= len(self._adt) and right_child >= len(self._adt):
+                gt = left_child
+            elif left_child >= len(self._adt) and right_child <= len(self._adt):
+                gt = right_child
+            elif self._comparator(self._adt[left_child], self._adt[top_el_idx]) or self._comparator(self._adt[right_child], self._adt[top_el_idx]):
                 # Compare the two children and find out which one it is
                 if self._comparator(self._adt[left_child], self._adt[right_child]):
                     gt = left_child
                 else:
                     gt = right_child
 
-                if self._comparator(self._adt[gt], self._adt[top_el_idx]):
-                    self._adt[gt], self._adt[top_el_idx] = self._adt[top_el_idx], self._adt[gt]
-                    top_el_idx = gt
-                    left_child = Heap.get_left_child(top_el_idx)
-                    right_child = Heap.get_right_child(top_el_idx)
+            if self._comparator(self._adt[gt], self._adt[top_el_idx]):
+                self._adt[gt], self._adt[top_el_idx] = self._adt[top_el_idx], self._adt[gt]
+                top_el_idx = gt
+                left_child = Heap.get_left_child(top_el_idx)
+                right_child = Heap.get_right_child(top_el_idx)
             else:
                 break
 
@@ -83,7 +86,7 @@ def main():
     gt = lambda x, y: x > y
     lt = lambda x, y: x < y
 
-    heap = Heap(lt)
+    heap = Heap(gt)
     for item in arr:
         heap.insert(item)
 
