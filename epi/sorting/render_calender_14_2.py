@@ -1,3 +1,4 @@
+# TODO: Implement n log n version of this algorithm
 def render_calender(events):
     overlapping = []
     events = sorted(events, key=lambda x: x[0])
