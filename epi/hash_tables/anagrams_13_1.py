@@ -1,3 +1,5 @@
+# Problem 13.2 is also similar and should work the same way
+
 def is_anagram(w1, w2):
     chash = {}
 
