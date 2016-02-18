@@ -1,6 +1,7 @@
 class Heap:
-    def __init__(self):
+    def __init__(self, comparator):
         self._adt = []
+        self._comparator = comparator
 
     def insert(self, item):
         self._adt.append(item)
@@ -28,7 +29,7 @@ class Heap:
         last_el = len(self._adt) - 1
         parent = Heap.get_parent(last_el)
 
-        while parent >= 0 and self._adt[last_el] > self._adt[parent]:
+        while parent >= 0 and self._comparator(self._adt[last_el], self._adt[parent]):
             self._adt[parent], self._adt[last_el] = self._adt[last_el], self._adt[parent]
             last_el = parent
             parent = Heap.get_parent(last_el)
@@ -52,18 +53,20 @@ class Heap:
 
         while left_child < len(self._adt) - 1 and right_child < len(self._adt) - 1:
 
-            if self._adt[top_el_idx] < self._adt[left_child] or self._adt[top_el_idx] < self._adt[right_child]:
+            if self._comparator(self._adt[left_child], self._adt[top_el_idx]) or self._comparator(self._adt[right_child], self._adt[top_el_idx]):
                 # Compare the two children and find out which one it is
-                if self._adt[left_child] > self._adt[right_child]:
+                if self._comparator(self._adt[left_child], self._adt[right_child]):
                     gt = left_child
                 else:
                     gt = right_child
 
-                if self._adt[gt] > self._adt[top_el_idx]:
+                if self._comparator(self._adt[gt], self._adt[top_el_idx]):
                     self._adt[gt], self._adt[top_el_idx] = self._adt[top_el_idx], self._adt[gt]
                     top_el_idx = gt
                     left_child = Heap.get_left_child(top_el_idx)
                     right_child = Heap.get_right_child(top_el_idx)
+            else:
+                break
 
         return max_el
 
@@ -77,7 +80,10 @@ class Heap:
 def main():
     arr = [15, 10, 9, 8, 9, 6, 3, 4, 2]
 
-    heap = Heap()
+    gt = lambda x, y: x > y
+    lt = lambda x, y: x < y
+
+    heap = Heap(lt)
     for item in arr:
         heap.insert(item)
 
