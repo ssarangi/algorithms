@@ -5,26 +5,34 @@
 # [1, 3, 4, 6] Pattern to recognize
 #
 
-def sequence_exists(arr, pattern):
-    return False
-
-def sequence(arr, pattern, pattern_fnd, i, j, pidx = 0):
+def sequence(arr, pattern, seen_before, x, y, pidx = 0):
     num_cols = len(arr[0])
     num_rows = len(arr)
 
-    if pidx == len(pattern):
-        return pattern_fnd
+    if (x, y) in seen_before:
+        return seen_before[(x, y, pidx)]
 
-    all_patterns = []
+    if pidx == len(pattern) - 1:
+        if pattern[pidx] == arr[y][x]:
+            return True
 
-    for cx in range(-1, 2, 2):
-        for cy in range(-1, 2, 2):
-            if arr[i][j] == pattern[pidx]:
-                pattern_fnd.append(arr[i][j])
-                patt = sequence(arr, pattern, pattern_fnd, pidx+1)
-                all_patterns.append(patt)
+        return False
 
-    return all_patterns
+    if arr[y][x] != pattern[pidx]:
+        return False
+
+    found = False
+    for cx in range(-1, 2):
+        for cy in range(-1, 2):
+            if abs(cx) == 1 and abs(cy) == 1:
+                continue
+
+            if 0 <= x + cx < num_cols and 0 <= y + cy < num_rows:
+                found |= sequence(arr, pattern, seen_before, x+cx, y+cy, pidx+1)
+
+    seen_before[(x,y, pidx)] = found
+
+    return found
 
 def main():
     arr = [[1, 2, 3],
@@ -33,7 +41,7 @@ def main():
 
     pattern = [1, 3, 4, 6]
 
-    print(sequence(arr, pattern, 0, 0, [], 0))
+    print(sequence(arr, pattern, {}, 0, 0, 0))
     
 if __name__ == "__main__":
     main()
