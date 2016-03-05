@@ -5,7 +5,7 @@ class Node:
         self.data = data
 
 def sum_root_to_leaf(root):
-
+    pass
 
 def create_tree():
     A = Node(1)
