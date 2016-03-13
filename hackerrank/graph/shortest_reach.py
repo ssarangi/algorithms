@@ -6,14 +6,20 @@ class Graph:
         self.nodes = set()
         self.edges = []
 
+    def get_node(self, id):
+        for node in self.nodes:
+            if node.id == id:
+                return node
+
+        return None
+
     def add_node(self, node):
         self.nodes.add(node)
 
     def add_edge(self, edge, weight):
         self.edges.append(edge)
-        self.nodes.add(edge.n1)
         edge.n1.add_neighbor(edge.n2, weight)
-        self.nodes.add(edge.n2)
+        edge.n2.add_neighbor(edge.n1, weight)
 
     def num_nodes(self):
         return len(self.nodes)
@@ -42,18 +48,40 @@ class Node:
 def solve(graph, start_pt):
     num_nodes = graph.num_nodes()
     costs = [-1] * num_nodes
+    costs[start_pt] = 0
     Q = Queue()
+    start_node = graph.get_node(start_pt)
+    Q.put(start_node)
+    visited = {}
 
     while not Q.empty():
         node = Q.get()
+        if node in visited:
+            continue
 
+        visited[node] = True
+
+        current_cost = costs[node.id]
+        for neighbor, weight in node.neighbors:
+            Q.put(neighbor)
+            new_cost = current_cost + weight
+            if costs[neighbor.id] > new_cost:
+                costs[neighbor.id] = new_cost
+
+    return costs
 
 def create_graph(rep):
-    start_pt = rep[0]
-    actual_rep = rep[1]
+    N = rep[0]
+    start_pt = rep[1]
+    actual_rep = rep[2]
 
-    graph = Graph()
     nodes = {}
+    graph = Graph()
+    for i in range(0, N):
+        n = Node(i)
+        nodes[i] = n
+        graph.add_node(n)
+
     for edge in actual_rep:
         n1 = edge[0]
         n2 = edge[1]
@@ -72,7 +100,7 @@ def create_graph(rep):
             n2 = nn2
 
         nedge = Edge(n1, n2)
-        graph.add_edge(nedge)
+        graph.add_edge(nedge, 6)
 
     return start_pt, graph
 
@@ -89,7 +117,7 @@ def read(read_fn):
             graph.append((x, y))
         start_pt = int(read_fn())
 
-        cases.append((start_pt, graph))
+        cases.append((N, start_pt, graph))
     return cases
 
 def main():
@@ -101,8 +129,13 @@ def main():
 
     for test_case in test_cases:
         start_pt, graph = create_graph(test_case)
-        solve(graph, start_pt)
+        costs = solve(graph, start_pt)
+        s = ""
+        for i, c in enumerate(costs):
+            if i != start_pt:
+                s += str(c) + " "
 
+        print(s)
 
 if __name__ == "__main__":
     main()
