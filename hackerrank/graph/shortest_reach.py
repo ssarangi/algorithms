@@ -45,9 +45,14 @@ class Node:
     def add_neighbor(self, node, weight):
         self.neighbors.add((node, weight))
 
+    def __str__(self):
+        return str(self.id)
+
+    __repr__ = __str__
+
 def solve(graph, start_pt):
     num_nodes = graph.num_nodes()
-    costs = [-1] * num_nodes
+    costs = [-1] * (num_nodes + 1)
     costs[start_pt] = 0
     Q = Queue()
     start_node = graph.get_node(start_pt)
@@ -63,10 +68,11 @@ def solve(graph, start_pt):
 
         current_cost = costs[node.id]
         for neighbor, weight in node.neighbors:
-            Q.put(neighbor)
-            new_cost = current_cost + weight
-            if costs[neighbor.id] > new_cost:
-                costs[neighbor.id] = new_cost
+            if neighbor not in visited:
+                Q.put(neighbor)
+                new_cost = current_cost + weight
+                if costs[neighbor.id] == -1 or costs[neighbor.id] > new_cost:
+                    costs[neighbor.id] = new_cost
 
     return costs
 
@@ -132,7 +138,7 @@ def main():
         costs = solve(graph, start_pt)
         s = ""
         for i, c in enumerate(costs):
-            if i != start_pt:
+            if i != start_pt and i != 0:
                 s += str(c) + " "
 
         print(s)
