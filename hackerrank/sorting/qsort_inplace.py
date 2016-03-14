@@ -26,7 +26,9 @@ def quicksort(arr, start, end):
         split = inplace_qsort(arr, start, end)
 
         # Sort both halves
+        print(arr)
         quicksort(arr, start, split - 1)
+        print(arr)
         quicksort(arr, split + 1, end)
 
     return arr
