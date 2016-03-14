@@ -46,7 +46,7 @@ def main():
 
     arr = quicksort(arr, 0, len(arr) - 1)
     for i in arr:
-        print(i, ' ')
+        print(i, end=' ')
 
     print("")
 
