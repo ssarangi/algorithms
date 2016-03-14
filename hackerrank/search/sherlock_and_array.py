@@ -13,15 +13,15 @@ def does_balancing_element_exist(arr):
         sum_from_right[i] = prev_sum + arr[i]
         prev_sum = sum_from_right[i]
 
-    sum_left = 0
-    sum_right = 0
-
     for pivot_el in range(0, len(arr)):
+        sum_left = 0
+        sum_right = 0
+
         if pivot_el > 0:
-            sum_left = arr[pivot_el - 1]
+            sum_left = sum_from_left[pivot_el - 1]
 
         if pivot_el < len(arr) - 1:
-            sum_right = arr[pivot_el + 1]
+            sum_right = sum_from_right[pivot_el + 1]
 
         if sum_left == sum_right:
             return True
