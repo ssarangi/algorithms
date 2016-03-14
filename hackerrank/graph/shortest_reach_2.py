@@ -118,9 +118,13 @@ def create_graph(rep):
             n2 = nn2
 
         nedge = Edge(n1, n2)
-        w = n1.has_neighbor(n1.id)
+        w = n1.has_neighbor(n2.id)
         if w > -1:
             n1.update_neighbor(n2, w, weight)
+
+        w = n2.has_neighbor(n1.id)
+        if w > -1:
+            n2.update_neighbor(n1, w, weight)
 
         graph.add_edge(nedge, weight)
 
