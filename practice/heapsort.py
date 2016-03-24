@@ -1,11 +1,12 @@
 class Heap:
-    def __init__(self, comparator):
+    def __init__(self, comparator, inverse_comparator):
         self.comparator = comparator
+        self.inverse_comparator = inverse_comparator
         self.internal = [None]
 
     def add_element(self, el):
         self.internal.append(el)
-        self.heapify()
+        self.heapify_up()
 
     def is_empty(self):
         return len(self.internal) == 1
@@ -24,8 +25,8 @@ class Heap:
         return root
 
     def get_child(self, cn):
-        cn_1 = 2 * cn + 1
-        cn_2 = 2 * cn + 2
+        cn_1 = 2 * cn
+        cn_2 = 2 * cn + 1
 
         rn = None
         if len(self.internal) > cn_1:
@@ -37,30 +38,41 @@ class Heap:
             else:
                 rn = cn_2
 
-        print(rn)
-        return rn 
+        return rn
 
     def heapify(self):
         perform_heapify = True
 
-        cn = self.internal[1]
+        cn = 1
         while perform_heapify:
             child = self.get_child(cn)
-            if child is not None and self.comparator(self.internal[cn], self.internal[child]):
+
+            if child is not None and not self.comparator(self.internal[cn], self.internal[child]):
                 self.internal[cn], self.internal[child] = self.internal[child], self.internal[cn]
+                cn = child
+            else:
+                perform_heapify = False
+
+    def heapify_up(self):
+        perform_heapify = True
+
+        cn = len(self.internal) - 1
+        while cn > 0 and perform_heapify:
+            parent = cn // 2
+            if parent > 0 and not self.inverse_comparator(self.internal[cn], self.internal[parent]):
+                self.internal[cn], self.internal[parent] = self.internal[parent], self.internal[cn]
+                cn = parent
             else:
                 perform_heapify = False
 
 from random import randint
 
 def main():
-    arr = set()
-    while len(arr) < 20:
-        arr.add(randint(0, 20))
+    arr = [5,2,9,10,15,11,18,12,3,6]
 
     min_heap = lambda x, y: x < y
     max_heap = lambda x, y: x > y
-    heap = Heap(min_heap)
+    heap = Heap(min_heap, max_heap)
     for i in arr:
         heap.add_element(i)
 
