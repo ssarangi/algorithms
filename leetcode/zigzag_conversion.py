@@ -5,26 +5,24 @@ class Solution(object):
         :type numRows: int
         :rtype: str
         """
-        arr = [""] * numRows
-        center = numRows // 2
-        cp = 0
-        column = 0
-        terminate = False
-        while not terminate:
-            if column % 2 == 0:
-                for i in range(0, numRows):
-                    arr[i] += s[cp]
-                    cp += 1
-                    if cp >= len(s):
-                        terminate = True
-                        break
-            else:
-                arr[center] += s[cp]
-                cp += 1
-                if cp >= len(s):
-                    terminate = True
+        if len(s) == 0 or s == "" or numRows == 1:
+            return s
 
-            column += 1
+        arr = [""] * numRows
+
+        cp = 0
+        current_row = 0
+        row_change = 1
+        while cp < len(s):
+            arr[current_row] += s[cp]
+            current_row += row_change
+
+            if current_row == numRows - 1:
+                row_change = -1
+            elif current_row == 0:
+                row_change = 1
+
+            cp += 1
 
         final = ""
         for i in arr:
@@ -36,4 +34,8 @@ soln = Solution()
 
 s = "PAYPALISHIRING"
 numRows = 3
+
+s = "AB"
+numRows = 1
+
 print(soln.convert(s, numRows))
