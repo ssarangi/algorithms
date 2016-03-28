@@ -7,13 +7,18 @@ class Solution(object):
         :type s: str
         :rtype: str
         """
-        max_len = 0
+        max_len = 1
         palin_start = 0
         
         for start in range(1, len(s) - 1):
             mismatch = False
             p1 = start
-            p2 = start + 1
+
+            if len(s) % 2 == 0:
+                p2 = start + 1
+            else:
+                p2 = start
+
             current_len = 0
             while not mismatch:
                 if s[p1] != s[p2]:
@@ -33,5 +38,6 @@ class Solution(object):
         return s[palin_start - max_len + 1 : palin_start + max_len + 1]
 
 s = "forgeeksskeegfor"
+s = "abb"
 soln = Solution()
 print(soln.longestPalindrome(s))
