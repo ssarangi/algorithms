@@ -1,5 +1,4 @@
-class LRUCache(object):
-
+class LRUCache1(object):
     def __init__(self, capacity):
         """
         :type capacity: int
@@ -48,10 +47,56 @@ class LRUCache(object):
         return str(self._data)
 
 
+class LRUCache2(object):
+    def __init__(self, capacity):
+        self.capacity = capacity
+        self.tm = 0
+        self.cache = {}
+        self.lru = {}
+        
+    def get(self, key):
+        if key in self.cache:
+            self.lru[key] = self.tm
+            self.tm += 1
+            return self.cache[key]
+            
+        return -1
+        
+    def set(self, key, value):
+        if len(self.cache) >= self.capacity:
+            # Find the LRU entry
+            old_key = min(self.lru.keys(), key=lambda k: self.lru[k])
+            self.cache.pop(old_key)
+            self.lru.pop(old_key)
+        
+        self.cache[key] = value
+        self.lru[key] = self.tm
+        self.tm += 1
+
+import collections
+
+class LRUCache:
+    def __init__(self, capacity):
+        self.capacity = capacity
+        self.cache = collections.OrderedDict()
+        
+    def get(self, key):
+        try:
+            value = self.cache.pop(key)
+            self.cache[key] = value
+            return value
+        except KeyError:
+            return -1
+            
+    def set(self, key, value):
+        try:
+            self.cache.pop(key)
+        except KeyError:
+            if len(self.cache) >= self.capacity:
+                self.cache.popitem(last=False)
+        self.cache[key] = value
+
 max_size = 2048
-
-
-
 lru_cache = LRUCache(2048)
 
 lru_cache.set(1178,3401)
@@ -20553,6 +20598,3 @@ lru_cache.set(1240,5490)
 lru_cache.set(324,2754)
 lru_cache.get(75)
 lru_cache.get(277)
-
-print(lru_cache)
-
