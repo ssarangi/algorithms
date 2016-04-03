@@ -1,7 +1,6 @@
 # Definition for singly-linked list.
-id  = 10
 class ListNode(object):
-    def __init__(self, x, id):
+    def __init__(self, x):
         self.val = x
         self.next = None
 
@@ -44,12 +43,10 @@ class Solution(object):
         return head
 
 def create_list(*args):
-    global id
     head = None
     prev = None
     for el in args:
-        cn = ListNode(el, id)
-        id += 1
+        cn = ListNode(el)
         
         if head is None:
             head = cn
