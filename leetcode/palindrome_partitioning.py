@@ -4,28 +4,32 @@ class Solution(object):
         :type s: str
         :rtype: List[List[str]]
         """
-        def get_substr(s, n):
-            substr = ""
-            for i in range(0, len(s)):
-                if (n and (1 << i)) > 0:
-                    substr += s[i]
-                    print("Substring: " + substr)
-                    
-            return substr
+        substrs = []
+        table = [[0] * len(s) for i in range(0, len(s))]
         
-        def generate_substrings(s):
-            l = len(s)
-            all_strs = []
-            for i in range(1, 2 ** l - 1):
-                all_strs.append(get_substr(s, i))
+        # Generate all the substrings
+        for length in range(1, len(s) + 1):
+            new_substrs = []
+            for start in range(0, len(s) - 1):
+                end = min(len(s) - 1, start + length - 1)
+                if s[start] == s[end]:
+                    if length == 1 or length == 2:
+                        table[start][end] = 1
+                    else:
+                        table[start][end] = table[start+1][end-1]
+                        
+                    if table[start][end] == 1:
+                        new_substrs.append(s[start:end+1])
             
-            return all_strs
+            if len(new_substrs) > 0:
+                substrs.append(new_substrs)
         
-        all_strs = generate_substrings(s)
-        for s in all_strs:
-            print(s)
-    
+        return substrs
+
 soln = Solution()
 
-s = "aab"
-soln.partition(s)
+s = "cdd"
+all_substrs = soln.partition(s)
+
+for ss in all_substrs:
+    print(ss)
