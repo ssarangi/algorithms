@@ -7,7 +7,9 @@ class Stack(object):
             self._data.append(x)
             
         def get(self):
-            return self._data.pop()
+            v = self._data[0]
+            del self._data[0]
+            return v
             
         def empty(self):
             return len(self._data) == 0
@@ -34,7 +36,6 @@ class Stack(object):
             self.other.put(el)
         
         self.other, self.q = self.q, self.other
-        print(self.q)
 
     def pop(self):
         """
