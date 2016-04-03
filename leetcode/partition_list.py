@@ -45,6 +45,7 @@ class Solution(object):
                 if l1 is None:
                     l1 = nn
                     new_head_l1 = nn
+                    prev_l1 = new_head_l1
                 else:
                     l1.next = nn
                     prev_l1 = nn
