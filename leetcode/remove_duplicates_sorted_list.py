@@ -1,6 +1,7 @@
 # Definition for singly-linked list.
+id  = 10
 class ListNode(object):
-    def __init__(self, x):
+    def __init__(self, x, id):
         self.val = x
         self.next = None
 
@@ -26,31 +27,29 @@ class Solution(object):
         while cn is not None:
             if cn.val not in elements:
                 elements[cn.val] = True
+                prev = cn
+                cn = cn.next
             else:
                 # Head node cannot be deleted since no other elements
                 # have been added to it yet.
                 # This is the last node
                 if cn.next is None:
-                    print("Reached last node")
-                    print(cn.val, prev.val)
                     prev.next = None
+                    prev = cn
+                    cn = cn.next
                 else:
-                    print_list(head)
                     cn.val = cn.next.val
                     cn.next = cn.next.next
-                    
-                prev = cn
-            
-            cn = cn.next
-            print_list(head)
-        
+
         return head
 
 def create_list(*args):
+    global id
     head = None
     prev = None
     for el in args:
-        cn = ListNode(el)
+        cn = ListNode(el, id)
+        id += 1
         
         if head is None:
             head = cn
@@ -64,5 +63,5 @@ def create_list(*args):
     
 soln = Solution()
 
-l = create_list(1, 1, 2, 3, 3)
+l = create_list(1, 1, 1)
 print_list(soln.deleteDuplicates(l))
