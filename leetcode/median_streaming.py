@@ -29,8 +29,8 @@ class MedianFinder:
                 heapq.heappush(self.max_heap, num)
                 
         if len(self.min_heap) > len(self.max_heap) + 1:
-            heapq.push(self.max_heap, heapq.pop(self.min_heap))
-        else:
+            heapq.heappush(self.max_heap, heapq.heappop(self.min_heap))
+        elif len(self.max_heap) > len(self.min_heap) + 1:
             heapq.heappush(self.min_heap, heapq.heappop(self.max_heap))
             
     def findMedian(self):
@@ -38,21 +38,25 @@ class MedianFinder:
         Returns the median of current data stream
         :rtype: float
         """
+        print(self.min_heap)
+        print(self.max_heap)
         if len(self.min_heap) == len(self.max_heap):
-            return 0.5 * (heapq.heappop(self.min_heap), heapq.heappop(self.max_heap))
+            print("I am here")
+            return 0.5 * (heapq.heappop(self.min_heap) + heapq.heappop(self.max_heap))
         else:
+            print("Ok.. this is wierd")
             return heapq.heappop(self.min_heap)
 
 # Your MedianFinder object will be instantiated and called as such:
 mf = MedianFinder()
 
 mf.addNum(-1)
-mf.findMedian()
+print(mf.findMedian())
 mf.addNum(-2)
-mf.findMedian()
+print(mf.findMedian())
 mf.addNum(-3)
-mf.findMedian()
+print(mf.findMedian())
 mf.addNum(-4)
-mf.findMedian()
+print(mf.findMedian())
 mf.addNum(-5)
-mf.findMedian()
+print(mf.findMedian())
