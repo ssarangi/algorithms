@@ -5,9 +5,13 @@ class MedianFinder:
         """
         Initialize your data structure here.
         """
-        self.data_lt = []
-        self.data_gt = []
-        self.num_data = 0
+        self.min_heap = []
+        self.max_heap = []
+        
+    def top(self, heap):
+        val = heapq.heappop(heap)
+        heapq.heappush(heap, val)
+        return val
 
     def addNum(self, num):
         """
@@ -15,34 +19,29 @@ class MedianFinder:
         :type num: int
         :rtype: void
         """
-        if self.num_data % 2 == 0:
-            # Add to the left array
-            heapq.heappush(self.data_lt, num)
+        # If the min heap is empty then add it to min heap
+        if len(self.min_heap) == 0:
+            heapq.heappush(self.min_heap, num)
         else:
-            heapq.heappush(self.data_gt, -1 * num)
+            if num > self.top(self.min_heap):
+                heapq.heappush(self.min_heap, num)
+            else:
+                heapq.heappush(self.max_heap, num)
+                
+        if len(self.min_heap) > len(self.max_heap) + 1:
+            heapq.push(self.max_heap, heapq.pop(self.min_heap))
+        else:
+            heapq.heappush(self.min_heap, heapq.heappop(self.max_heap))
             
-        self.num_data += 1
-
     def findMedian(self):
         """
         Returns the median of current data stream
         :rtype: float
         """
-        if self.num_data % 2 == 0:
-            n1 = heapq.heappop(self.data_lt)
-            heapq.heappush(self.data_lt, n1)
-            n2 = -1 * heapq.heappop(self.data_gt)
-            heapq.heappush(self.data_gt, -1 * n2)
-            median = (n1 + n2) / 2.0
+        if len(self.min_heap) == len(self.max_heap):
+            return 0.5 * (heapq.heappop(self.min_heap), heapq.heappop(self.max_heap))
         else:
-            if len(self.data_gt) > 0:
-                median = -1 * heapq.heappop(self.data_gt)
-                heapq.heappush(self.data_gt, -1 * median)
-            else:
-                assert len(self.data_lt) == 1
-                median = self.data_lt[0]
-                
-        return float(median)
+            return heapq.heappop(self.min_heap)
 
 # Your MedianFinder object will be instantiated and called as such:
 mf = MedianFinder()
