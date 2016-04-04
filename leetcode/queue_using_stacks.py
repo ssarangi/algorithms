@@ -28,14 +28,17 @@ class Queue(object):
         """
         :rtype: int
         """
-        return self._other[0]
+        if len(self._other) > 0:
+            return self._other[-1]
+        else:
+            return self._data[0]
         
 
     def empty(self):
         """
         :rtype: bool
         """
-        return len(self._data) == 0
+        return len(self._data) == 0 and len(self._other) == 0
         
 q = Queue()
 q.push(1)
