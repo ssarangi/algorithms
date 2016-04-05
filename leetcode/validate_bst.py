@@ -13,10 +13,10 @@ class Solution(object):
         """
         def _isValidBST(root, prev = None):
             if root is not None:
-                is_valid_left, prev = _isValidBST(root.left)
+                is_valid_left, prev = _isValidBST(root.left, prev)
                 if not is_valid_left:
                     return False, prev
-                    
+                
                 if prev is not None and root.val <= prev.val:
                     return False, prev
                     
@@ -26,7 +26,7 @@ class Solution(object):
             
             return True, prev
         
-        return _isValidBST(root)
+        return _isValidBST(root)[0]
         
 def create_tree():
     root = TreeNode(10)
