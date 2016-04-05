@@ -19,9 +19,9 @@ class Heap:
             parent_idx = n // 2
             parent = self.data[parent_idx]
 
-    def get_bigger_child(self, parent):
-        left_child_idx = 2 * parent + 1
-        right_child_idx = 2 * parent + 2
+    def get_smaller_child(self, parent):
+        left_child_idx = 2 * parent
+        right_child_idx = 2 * parent + 1
         
         if left_child_idx >= len(self.data):
             return None
@@ -32,7 +32,7 @@ class Heap:
         left_child = self.data[left_child_idx]
         right_child = self.data[right_child_idx]
         
-        if left_child > right_child:
+        if left_child < right_child:
             return left_child_idx
         else:
             return right_child_idx
@@ -42,13 +42,11 @@ class Heap:
             return
         
         cn = 1
-        bigger_child = self.get_bigger_child(1)
-        print("Bigger Child: %s" % self.data[bigger_child])
-        while bigger_child == None and self.data[bigger_child] < self.data[cn]:
-            self.data[cn], self.data[bigger_child] = self.data[bigger_child], self.data[cn]
-            cn = bigger_child
-            bigger_child = self.get_bigger_child(cn)
-            print("Bigger Child: %s" % self.data[bigger_child])
+        smaller_child = self.get_smaller_child(1)
+        while smaller_child != None and self.data[smaller_child] < self.data[cn]:
+            self.data[cn], self.data[smaller_child] = self.data[smaller_child], self.data[cn]
+            cn = smaller_child
+            smaller_child = self.get_smaller_child(cn)
 
     def pop(self):
         if len(self.data) > 1:
