@@ -56,7 +56,8 @@ class Solution(object):
         if amount == 0:
             return 0
 
-        dp = [-1] * (amount + 1)
+        max_coin_val = max(coins)
+        dp = [-1] * (max(amount, max_coin_val)  + 1)
         dp[0] = 0
 
         for i in coins:
@@ -64,13 +65,11 @@ class Solution(object):
 
         for i in range(1, amount + 1):
             if i not in coins:
-                if i == 838:
-                    print("Hello")
-
                 min_v = sys.maxsize
                 for j in coins:
-                    if i > j:
-                        min_v = min(min_v, dp[i - j])
+                    if i > j and dp[i-j] > -1:
+                        if min_v > dp[i - j]:
+                            min_v = dp[i - j]
 
                 if min_v != sys.maxsize and min_v > 0:
                     dp[i] = min_v + 1
@@ -79,8 +78,8 @@ class Solution(object):
 
 soln = Solution()
 
-# coins = [1, 2, 5]
-# amount = 11
+coins = [1, 2, 5]
+amount = 11
 
 # coins = [2]
 # amount = 3
@@ -91,8 +90,14 @@ soln = Solution()
 # coins = [2, 5, 10, 1]
 # amount = 27
 
-coins = [186,419,83,408]
-# coins = [419]
-amount = 838
+# coins = [186,419,83,408]
+# # coins = [419]
+# amount = 838
+
+# coins = [2]
+# amount = 1
+
+coins = [370, 417, 408, 156, 143, 434, 168, 83, 177, 280, 117]
+amount = 9953
 
 print(soln.coinChange(coins, amount))
