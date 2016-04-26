@@ -98,10 +98,15 @@ public:
 int main() {
     Solution soln;
 
-    // std::vector<std::string> words {"This", "is", "an", "example", "of", "text", "justification."};
-    vector<string> words {"tushar", "roy", "likes", "to", "code"};
+    vector<string> words {"This", "is", "an", "example", "of", "text", "justification."};
+    // vector<string> words {"tushar", "roy", "likes", "to", "code"};
 
-    int maxWidth = 10;
-    soln.fullJustify(words, maxWidth);
+    int maxWidth = 16;
+    vector<string> lines = soln.fullJustify(words, maxWidth);
+    
+    for (auto line: lines) {
+        cout << line << endl;
+    }
+    
     return 0;
 }
