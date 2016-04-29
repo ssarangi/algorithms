@@ -40,9 +40,7 @@ public:
         s = trim(s);
         if (s.length() == 0)
             return s;
-            
-        std::vector<int> dp(s.length(), 0);
-        
+
         int longest_palindrome = 1;
         std::string substring = s.substr(0, s.length());
         std::string reverse = substring;
