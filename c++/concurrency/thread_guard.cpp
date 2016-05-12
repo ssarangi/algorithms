@@ -20,7 +20,7 @@ private:
 };
 
 int main() {
-    std::thread t([]() { std::cout << "Hello I am in thread" << std::endl; });
+    std::thread t([](int a, std::string s) { std::cout << "Hello I am in thread " << a << " --> " << s << std::endl; }, 3, "yoooooooo");
     thread_guard g(t);
     
     std::cout << "I am in global scope" << std::endl;
