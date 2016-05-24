@@ -33,7 +33,7 @@ class UnitTests(unittest.TestCase):
     def setUpClass(cls):
         cls.soln = Solution()
 
-    def testIsNumber(self):
+    def testFirstMissingPositive(self):
         self.assertEqual(self.soln.firstMissingPositive([1, 2, 0]), 3)
         self.assertEqual(self.soln.firstMissingPositive([3, 4, -1, 1]), 2)
         self.assertEqual(self.soln.firstMissingPositive([1]), 2)
