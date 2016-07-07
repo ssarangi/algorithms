@@ -4,6 +4,8 @@
  5  6  7  8     =>      3   4   7   8
  9  10 11 12            9   10  13  14
  13 14 15 16            11  12  15  16
+ 
+ Look at the TileProblem to see the full description of the problem.
 */
 
 #include <iostream>
