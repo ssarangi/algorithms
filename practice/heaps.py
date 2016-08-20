@@ -5,7 +5,6 @@ class Heap:
     def push(self, item):
         self.data.append(item)
         self.heapify_up()
-        print(self.data)
         
     def heapify_up(self):
         n = len(self.data) - 1
@@ -18,7 +17,7 @@ class Heap:
             n = parent_idx
             parent_idx = n // 2
             parent = self.data[parent_idx]
-
+            
     def get_smaller_child(self, parent):
         left_child_idx = 2 * parent
         right_child_idx = 2 * parent + 1
@@ -53,7 +52,9 @@ class Heap:
             v = self.data[1]
             self.data[1] = self.data[len(self.data) - 1]
             self.data.pop()
+            print(" ".join([str(i) for i in self.data]))
             self.heapify_down()
+            print(" ".join([str(i) for i in self.data]))
             return v
         else:
             raise Exception("No elements in the data")
@@ -62,15 +63,11 @@ class Heap:
         return len(self.data) == 1
 
 heap = Heap()
+arr = [5, 1, 2, 9, 10, 4, 6, 8, 11, 20]
 
-heap.push(5)
-heap.push(8)
-heap.push(2)
-heap.push(1)
-heap.push(10)
-heap.push(9)
-heap.push(15)
+for i in arr:
+    heap.push(i)
 
-
+print(heap.data)
 while not heap.empty():
     print(heap.pop())

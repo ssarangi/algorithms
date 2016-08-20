@@ -31,6 +31,6 @@ def quicksort(arr, start, end):
 import random
 
 arr = [random.randint(0, 20) for _ in range(0, 20)]
-
+# arr = [5, 2, 6, 1, 3, 4]
 print("Original: %s" % arr)
 print("Sorted: %s" % quicksort(arr, 0, len(arr) - 1))

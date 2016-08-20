@@ -61,11 +61,11 @@ def find_following_integer(num_as_str):
     num = create_number(digits)
     return num
 
-with open(sys.argv[1], 'r') as test_cases:
-    for test in test_cases:
-        test = test.replace("\n", "")
-        new_num = find_following_integer(test)
-        print(new_num)
+# with open(sys.argv[1], 'r') as test_cases:
+#     for test in test_cases:
+#         test = test.replace("\n", "")
+#         new_num = find_following_integer(test)
+#         print(new_num)
 
 import unittest
 

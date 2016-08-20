@@ -10,8 +10,10 @@ void *aligned_malloc(size_t req_bytes, size_t alignment) {
     if ((p1 = (void *)malloc(req_bytes + offset)) == nullptr)
         return nullptr;
 
-    std::cout << p1 << " -- " << size_t(p1) % alignment << std::endl;
-    p2 = (void *)(size_t(p1) + (alignment - size_t(p1) % alignment) + sizeof(void*));
+    size_t addr = size_t(p1) + alignment + sizeof(void*);
+    
+    p2 = (void *)(addr - addr % alignment);
+    *((size_t *)p2-1) = (size_t)p1;
     return p2;
 }
 
