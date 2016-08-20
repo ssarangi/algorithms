@@ -1,5 +1,6 @@
 import sys
 
+
 class Char:
     def __init__(self, c):
         self.c = c
@@ -92,8 +93,11 @@ def string_searching_helper(orig, orig_idx, char_list, char_list_idx):
     #     return False
 
     # Case 3: We are at a repeat. So we need to split at this point and run recursively
-    curr_match = string_searching_helper(orig, orig_idx + 1, char_list, char_list_idx)
-    curr_match |= string_searching_helper(orig, orig_idx, char_list, char_list_idx + 1)
+    if orig_idx + 1 < len(orig):
+        curr_match = string_searching_helper(orig, orig_idx + 1, char_list, char_list_idx)
+
+    if char_list_idx + 1 < len(char_list):
+        curr_match |= string_searching_helper(orig, orig_idx, char_list, char_list_idx + 1)
 
     return curr_match
 
@@ -110,26 +114,83 @@ def string_searching(full_str):
 
     return found_match
 
+# Rishi provided a very simple and elegant solution to this problem. The idea is
+# to split the pattern at the *. Then find the substring locations and if all
+# the substrings occur in the string then its a match
+def split(pattern):
+    patterns = []
 
-with open(sys.argv[1], 'r') as test_cases:
-    for test in test_cases:
-        test = test.replace("\n", "")
-        match = string_searching(test)
-        print(str(match).lower())
+    prev = None
+    curr_str = ""
+    for c in pattern:
+        if c == '\\':
+            prev = c
+            continue
+        elif c != '*' or (c == '*' and prev == '\\'):
+            curr_str += c
+        elif c == '*':
+            patterns.append(curr_str)
+            curr_str = ""
 
-# import unittest
+        prev = c
 
-
-# class UnitTest(unittest.TestCase):
-#     def testStringSearching(self):
-#         self.assertEqual(string_searching("Hello,ell"), True)
-#         self.assertEqual(string_searching("This is good, is"), True)
-#         self.assertEqual(string_searching("aaaab,a*b"), True)
-#         self.assertEqual(string_searching("CodeEval,C*Eval"), True)
-#         self.assertEqual(string_searching("Old,Young"), False)
-#         self.assertEqual(string_searching("PQYARSqAynqv AZ 9Lh2 lOq v2kH4NwX,*2kH4N"), True)
-#         self.assertEqual(string_searching("w2WILmbM0qETRigSZ dVfSSsI4OFZMjv,fSF2IjISs MZmVOTdR"), False)
+    patterns.append(curr_str)
+    return patterns
 
 
-# if __name__ == "__main__":
-#     unittest.main()
+def find_first_occurence(string, substring):
+    initial_pos = -1
+    for i in range(0, len(string)):
+        initial_pos = i
+        for j in range(0, len(substring)):
+            if string[i + j] != substring[j]:
+                initial_pos = -1
+                break
+
+        if initial_pos != -1:
+            break
+
+    return initial_pos
+
+
+def rishi_string_search(full_str):
+    string, pattern = full_str.split(",")
+    patterns = split(pattern)
+
+    for pattern in patterns:
+        # Find the first position of the string
+        pos = find_first_occurence(string, pattern)
+        if pos != -1:
+            string = string[pos + len(pattern) + 1:]
+        else:
+            return False
+
+    return True
+
+
+if __name__ == "__main__":
+    with open(sys.argv[1], 'r') as test_cases:
+        for test in test_cases:
+            test = test.replace("\n", "")
+            match = string_searching(test)
+            match1 = rishi_string_search(test)
+            if match != match1:
+                print("Values do not match: " + test)
+            print(str(match).lower())
+
+            # import unittest
+
+
+            # class UnitTest(unittest.TestCase):
+            #     def testStringSearching(self):
+            #         self.assertEqual(string_searching("Hello,ell"), True)
+            #         self.assertEqual(string_searching("This is good, is"), True)
+            #         self.assertEqual(string_searching("aaaab,a*b"), True)
+            #         self.assertEqual(string_searching("CodeEval,C*Eval"), True)
+            #         self.assertEqual(string_searching("Old,Young"), False)
+            #         self.assertEqual(string_searching("PQYARSqAynqv AZ 9Lh2 lOq v2kH4NwX,*2kH4N"), True)
+            #         self.assertEqual(string_searching("w2WILmbM0qETRigSZ dVfSSsI4OFZMjv,fSF2IjISs MZmVOTdR"), False)
+
+
+            # if __name__ == "__main__":
+            #     unittest.main()
