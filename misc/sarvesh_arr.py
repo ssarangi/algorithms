@@ -16,20 +16,16 @@ def arrange_helper(nums, number, p1, p2):
 
 
 def arrange(nums):
+    unique_nums = sorted(list(set(nums)))
     p1 = 0
-    p2 = len(nums) - 1
 
-    # Do this is 2 passes
-    # 1st pass will arrange all the 0's to the end
-    p1 = arrange_helper(nums, 0, p1, p2)
-
-    # 2nd pass will arrange all the 1's next to the 0's
-    # Reset p2 to the end
-    p2 = len(nums) - 1
-    arrange_helper(nums, 1, p1, p2)
-
+    for i in range(0, len(unique_nums) - 1):
+        p2 = len(nums) - 1
+        # Do this is 2 passes
+        # 1st pass will arrange all the 0's to the end
+        p1 = arrange_helper(nums, unique_nums[i], p1, p2)
+    
     return nums
-
 
 import unittest
 import random
@@ -39,6 +35,11 @@ class UnitTest(unittest.TestCase):
     def testArrangeNums(self):
         for _ in range(0, 10):
             arr = [random.randint(0, 2) for _ in range(0, 10)]
+            self.assertEqual(arrange(arr), sorted(arr))
+            
+        for _ in range(0, 10):
+            maxint = random.randint(0, 10)
+            arr = [random.randint(0, maxint) for _ in range(0, 10)]
             self.assertEqual(arrange(arr), sorted(arr))
 
 
