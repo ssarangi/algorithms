@@ -3,7 +3,7 @@
 import heapq
 
 
-class MinHeap:
+class MaxHeap:
     def __init__(self):
         self.data = []
 
@@ -31,25 +31,25 @@ class Solution(object):
         :type k: int
         :rtype: List[List[int]]
         """
-        minheap = MinHeap()
+        maxheap = MaxHeap()
         for n1 in nums1:
             for n2 in nums2:
                 s = n1 + n2
                 add_el = True
-                if minheap.length() == k:
+                if maxheap.length() == k:
                     # Remove the max element
-                    if minheap.top() > s:
-                        minheap.pop()
+                    if maxheap.top() > s:
+                        maxheap.pop()
                     else:
                         add_el = False
 
                 if add_el:
-                    minheap.add(s, n1, n2)
+                    maxheap.add(s, n1, n2)
 
         # Now pop all the elements of the min heap
         results = []
-        while not minheap.empty():
-            results.insert(0, minheap.pop()[1])
+        while not maxheap.empty():
+            results.insert(0, maxheap.pop()[1])
 
         return results
 
