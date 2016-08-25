@@ -1,3 +1,5 @@
+# http://www.programcreek.com/2014/05/leetcode-minimum-size-subarray-sum-java/
+
 def minimum_size_subarray(arr, s):
     p1 = 0
     p2 = 0
