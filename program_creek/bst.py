@@ -9,6 +9,7 @@ class Node:
         self.v = v
         self.left = None
         self.right = None
+        self.next = None
 
     def __str__(self):
         return str(self.v)
@@ -50,7 +51,7 @@ class BST:
         self.__inorder(self.root, arr)
         return arr
 
-    def inorder_iterative(self, k = -1):
+    def inorder_iterative(self, k=-1):
         curr = self.root
         arr = []
         stack = []
@@ -202,6 +203,34 @@ class BST:
     def invertTree(self):
         self.__invertTree(self.root)
 
+    def flatten(self):
+        stack = []
+        curr = self.root
+
+        last = None
+
+        while curr is not None or len(stack) > 0:
+            if curr is not None:
+                last = curr
+                if curr.right is not None:
+                    stack.append(curr.right)
+
+                curr.next = curr.left
+                curr = curr.left
+            else:
+                curr = stack.pop()
+                last.next = curr
+
+        # Copy everything into an arr
+        arr = []
+
+        curr = self.root
+        while curr is not None:
+            arr.append(curr.v)
+            curr = curr.next
+
+        return arr
+
 
 import unittest
 
@@ -259,6 +288,10 @@ class UnitTest(unittest.TestCase):
     def testKthSmallestElement(self):
         el = self.bst.inorder_iterative(3)
         self.assertEqual(el, 5)
+
+    def testFlatten(self):
+        arr = self.bst.flatten()
+        self.assertEqual(arr, [10, 5, 2, 1, 7, 15, 14, 17])
 
 
 if __name__ == "__main__":
