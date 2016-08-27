@@ -1,6 +1,7 @@
 # All the problems from the BST category
 
 from queue import Queue
+import sys
 
 
 class Node:
@@ -44,8 +45,31 @@ class BST:
         if node.right is not None:
             self.__inorder(node.right, arr)
 
-    def inorder(self, arr):
+    def inorder(self):
+        arr = []
         self.__inorder(self.root, arr)
+        return arr
+
+    def inorder_iterative(self, k = -1):
+        curr = self.root
+        arr = []
+        stack = []
+
+        count = 0
+        while curr is not None or len(stack) > 0:
+            if curr is not None:
+                stack.append(curr)
+                curr = curr.left
+            else:
+                node = stack.pop()
+                arr.append(node.v)
+                count += 1
+                if count == k:
+                    return node.v
+
+                curr = node.right
+
+        return arr
 
     def __preorder(self, node, arr):
         arr.append(node.v)
@@ -135,6 +159,49 @@ class BST:
 
         return arr
 
+    def verticalOrder(self):
+        levels = {}
+
+        minlevel = sys.maxsize
+        maxlevel = -sys.maxsize
+
+        q = Queue()
+        q.put((self.root, 0))
+
+        while not q.empty():
+            node, level = q.get()
+            minlevel = min(minlevel, level)
+            maxlevel = max(maxlevel, level)
+
+            if level in levels:
+                levels[level].append(node.v)
+            else:
+                levels[level] = [node.v]
+
+            if node.left is not None:
+                q.put((node.left, level - 1))
+
+            if node.right is not None:
+                q.put((node.right, level + 1))
+
+        arr = []
+        for i in range(minlevel, maxlevel + 1):
+            arr.append(levels[i])
+
+        return arr
+
+    def __invertTree(self, node):
+        if node.left is not None:
+            self.__invertTree(node.left)
+
+        if node.right is not None:
+            self.__invertTree(node.right)
+
+        node.left, node.right = node.right, node.left
+
+    def invertTree(self):
+        self.__invertTree(self.root)
+
 
 import unittest
 
@@ -149,9 +216,10 @@ class UnitTest(unittest.TestCase):
             cls.bst.insert(num)
 
     def testInorderTraversal(self):
-        output = []
-        self.bst.inorder(output)
+        output = self.bst.inorder()
+        self.assertEqual(output, [1, 2, 5, 7, 10, 14, 15, 17])
 
+        output = self.bst.inorder_iterative()
         self.assertEqual(output, [1, 2, 5, 7, 10, 14, 15, 17])
 
     def testPreOrderTraversal(self):
@@ -173,6 +241,24 @@ class UnitTest(unittest.TestCase):
     def testBottomLevelOrderTraversal(self):
         output = self.bst.bottomupleveltraversal()
         self.assertEqual(output, [[1], [2, 7, 14, 17], [5, 15], [10]])
+
+    def testVerticalOrder(self):
+        output = self.bst.verticalOrder()
+        self.assertEqual(output, [[1], [2], [5], [10, 7, 14], [15], [17]])
+
+    def testInvertTree(self):
+        orig_inorder = self.bst.inorder()
+        orig_inorder.reverse()
+
+        self.bst.invertTree()
+        orig_invert = self.bst.inorder()
+        self.bst.invertTree()
+
+        self.assertEqual(orig_invert, orig_inorder)
+
+    def testKthSmallestElement(self):
+        el = self.bst.inorder_iterative(3)
+        self.assertEqual(el, 5)
 
 
 if __name__ == "__main__":
