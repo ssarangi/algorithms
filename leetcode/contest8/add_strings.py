@@ -1,5 +1,6 @@
 # https://leetcode.com/contest/8/problems/add-strings/
 
+
 class Solution(object):
     def addStrings(self, num1, num2):
         """
@@ -34,7 +35,10 @@ class Solution(object):
             p1 -= 1
             p2 -= 1
 
-        return int(total)
+        if carry != 0:
+            total = str(carry) + total
+
+        return total
 
 import unittest
 
@@ -44,10 +48,10 @@ class UnitTest(unittest.TestCase):
         cls.soln = Solution()
 
     def testAddStrings(self):
-        self.assertEqual(self.soln.addStrings("112", "113"), 225)
-        self.assertEqual(self.soln.addStrings("10", "5"), 15)
-        self.assertEqual(self.soln.addStrings("1000", "5"), 1005)
-
+        self.assertEqual(self.soln.addStrings("112", "113"), "225")
+        self.assertEqual(self.soln.addStrings("10", "5"), "15")
+        self.assertEqual(self.soln.addStrings("1000", "5"), "1005")
+        self.assertEqual(self.soln.addStrings("1", "9"), "10")
 
 if __name__ == "__main__":
     unittest.main()
