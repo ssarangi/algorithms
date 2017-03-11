@@ -1,5 +1,6 @@
 def divide(numerator,denominator):
-    pass
+    result = ""
+    
 
 import unittest
 

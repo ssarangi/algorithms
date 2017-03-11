@@ -84,12 +84,22 @@ class Solution(object):
             
 soln = Solution()
 
-print(soln.isMatch("aaa", "a*a"))
+import unittest
 
-assert soln.isMatch("aa", "a") is False
-assert soln.isMatch("aa", "aa") is True
-assert soln.isMatch("aaa", "aa") is False
-assert soln.isMatch("aa", "a*") is True
-assert soln.isMatch("aa", ".*") is True
-assert soln.isMatch("ab", ".*") is True
-assert soln.isMatch("aab", "c*a*b") is True
+class UnitTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.soln = Solution()
+        
+    def testRegex(self):
+        self.assertEqual(soln.isMatch("aa", "a"), False)
+        self.assertEqual(soln.isMatch("aa", "aa"), True)
+        self.assertEqual(soln.isMatch("aaa", "aa"), False)
+        self.assertEqual(soln.isMatch("aa", "a*"), True)
+        self.assertEqual(soln.isMatch("aa", ".*"), True)
+        self.assertEqual(soln.isMatch("ab", ".*"), True)
+        self.assertEqual(soln.isMatch("aab", "c*a*b"), True)
+        
+if __name__ == "__main__":
+    unittest.main()
+
