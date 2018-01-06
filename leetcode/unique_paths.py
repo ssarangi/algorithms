@@ -1,9 +1,9 @@
-# https://leetcode.com/problems/minimum-path-sum/description/
+# https://leetcode.com/problems/unique-paths/description/
 
 class Solution:
     def uniquePaths(self, m, n):
         """
-        :type grid: List[List[int]]
+        :type int, int
         :rtype: int
         """
         if m == 1 and n == 1:
